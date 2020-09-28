@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<!-- author: BoCheng
+		 date: 2014.4.14 
+		 desc: 根据当前组织结构Id，查询属于当前组织结构所有的监管公司，表supervision_enterprise 
+	-->
+	<select
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.selectSupervEnterpriseListByOrgId"
+		parameterClass="java.util.HashMap" resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  				 , supv.supv_telphone supvTelphone
+  				 , supv.is_delete isDelete
+  				 , supv.is_lock isLock
+  				 , supv.update_time updateTime
+  				 , supv.org_id orgId
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id 
+  		       and city.pro_id = pro.pro_id
+  		       and org_id = #orgId#
+  		       and is_delete = 0
+  		  ORDER BY update_time desc
+		  	LIMIT #limit# offset #offset#
+		]]>
+	</select>
+	
+	<!-- author: BoCheng
+		 date: 2014.4.14 
+		 desc: 根查询条件，查询属于当前组织结构所有的监管公司，表supervision_enterprise 
+	-->
+	<select
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.selectSupervEnterpriseListByInput"
+		parameterClass="java.util.HashMap" resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  				 , supv.supv_telphone supvTelphone
+  				 , supv.is_delete isDelete
+  				 , supv.is_lock isLock
+  				 , supv.update_time updateTime
+  				 , supv.org_id orgId
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id 
+  		       and city.pro_id = pro.pro_id
+  		       and org_id = #orgId#
+  		       and is_delete = 0 
+  		       and concat(supv.supv_name,city.city_name,pro.pro_name,supv.supv_telphone) like '%$input$%'
+  		  ORDER BY update_time desc
+		  	LIMIT #limit# offset #offset#
+		]]>
+	</select>
+	
+	<!-- author: BoCheng
+		 date: 2014.4.14 
+		 desc: 根查询条件，查询属于当前组织结构所有的监管公司条数 
+	-->
+	<select
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.selectSupervEnterpriseCountByInput"
+		parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT count(supv.supv_id)
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id 
+  		       and city.pro_id = pro.pro_id
+  		       and org_id = #orgId#
+  		       and is_delete = 0 
+  		       and concat(supv.supv_name,city.city_name,pro.pro_name,supv.supv_telphone) like '%$input$%'
+		]]>
+	</select>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 根据监管公司Id查询所有监管公司所有信息
+	 -->
+	<select
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.selectSupervEnterpriseById"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  				 , supv.supv_telphone supvTelphone
+  				 , supv.is_delete isDelete
+  				 , supv.is_lock isLock
+  				 , supv.update_time updateTime
+  				 , supv.org_id orgId
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id 
+  		       and city.pro_id = pro.pro_id
+  		       and supv_id = #id#
+  		       and is_delete = 0
+  		       and is_lock = 0
+		]]>
+	</select>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 向supervision_enterprise表中插入监管公司信息
+	 -->
+	<insert
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.insertSupervEnterprise"
+		parameterClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			insert into supervision_enterprise
+			            (  supv_id
+					     , city_id
+		  				 , supv_name
+		  				 , supv_telphone
+		  				 , org_id
+		  				 , is_delete
+		  				 , is_lock
+		  				 , update_time
+			            )
+			     values (  #supvId#
+					     , #cityId#
+		  				 , #supvName#
+		  				 , #supvTelphone#
+		  				 , #orgId#
+		  				 , #isDelete#
+		  				 , #isLock#
+		  				 , #updateTime#
+		  				 
+			     )
+		]]>
+	</insert>
+
+	<!-- author: BoCheng 
+	 	 date: 2014.4.14 
+	 	 desc: 根据监管公司Id，删除监管公司
+	  -->
+	<update
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.deleteSupervEnterprise"
+		parameterClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			UPDATE supervision_enterprise
+			SET is_delete = 1
+			WHERE supv_id = #supvId#
+			AND is_lock = 0
+		]]>
+	</update>
+	
+	<!-- author: jimmyan 
+	 	 date: 2014.4.14 
+	 	 desc: 根据监管公司Id，删除监管公司
+	  -->
+	<update
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.deleteSupervEnterpriseById"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			UPDATE supervision_enterprise
+			SET is_delete = 1
+			WHERE supv_id = #supvId#
+			AND is_lock = 0
+		]]>
+	</update>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 锁定监管公司
+	 -->
+	<update
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.lockSupervEnterprise"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			UPDATE supervision_enterprise
+			SET is_lock = 1
+			WHERE supv_id = #supvId#
+		]]>
+	</update>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 解锁监管公司
+	 -->
+	<update
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.unlockSupervEnterprise"
+		parameterClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			UPDATE supervision_enterprise
+			SET is_lock = 0
+			WHERE supv_id = #supvId#
+		]]>
+	</update>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 更新监管公司信息
+	 -->
+	<update
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.updateSupervEnterprise"
+		parameterClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			update supervision_enterprise
+			   set city_id = #cityId#
+		  		 , supv_name = #supvName#
+		  	     , supv_telphone = #supvTelphone#
+		  		 , update_time = #updateTime#
+		    where  supv_id = #supvId#
+		    AND is_lock = 0
+		]]>
+	</update>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 根据监管公司 id,获得监管公司的全部信息
+	 -->
+	<select
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.getSupervisionEnterpriseById"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  				 , supv.supv_telphone supvTelphone
+  				 , supv.is_delete isDelete
+  				 , supv.is_lock isLock
+  				 , supv.update_time updateTime
+  				 , supv.org_id orgId
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id
+  		       and city.pro_id = pro.pro_id
+  		       and supv.supv_id = #supvId#
+		]]>
+	</select>
+
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 通过orgId查询所有的监管企业
+	 -->
+	<select
+		id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.selectAllSupervEnterpriseListByOrgId"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  				 , supv.supv_telphone supvTelphone
+  				 , supv.is_delete isDelete
+  				 , supv.is_lock isLock
+  				 , supv.update_time updateTime
+  				 , supv.org_id orgId
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id 
+  		       and city.pro_id = pro.pro_id
+  		       and org_id = #orgId#
+  		       and is_delete = 0
+  		       and is_lock = 0
+		]]>
+	</select>
+	
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 通过orgId查询所有的监管企业总数
+	 -->
+	<select id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.selectSupervisionEnterpriseCount" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(supv.supv_id)
+				FROM supervision_enterprise supv
+				WHERE supv.org_id = #orgId#
+				AND supv.is_delete='0'	
+		]]>
+	</select>
+	
+	<!-- author: BoCheng 
+		 date: 2014.4.14 
+		 desc: 根据监管公司 Name,获得监管公司的全部信息
+	 -->
+	<select id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.getSupervisionEnterpriseByName"
+		    parameterClass="java.lang.String" 
+		    resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  				 , supv.supv_telphone supvTelphone
+  				 , supv.is_delete isDelete
+  				 , supv.is_lock isLock
+  				 , supv.update_time updateTime
+  				 , supv.org_id orgId
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+  		      FROM supervision_enterprise supv
+  		         , city city
+  		         , province pro
+  		     WHERE supv.city_id = city.city_id
+  		       and city.pro_id = pro.pro_id
+  		       and supv.supv_name = #supvName#
+		]]>
+	</select>	
+	
+	<!-- author: bianrx 
+		 date: 2014.5.27
+		 desc: 根据监管公司 Name,获得监管公司的id
+	 -->
+	<select id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.getSupvByName"
+		    parameterClass="java.lang.String" 
+		    resultClass="com.zwhs.chattel.entities.SupervisionEnterprise">
+		<![CDATA[
+			SELECT supv.supv_id supvId
+  				 , supv.supv_name supvName
+  		      FROM supervision_enterprise supv
+  		     WHERE supv.supv_name = #supvName#
+		]]>
+	</select>
+		
+	<!-- author: jimmyan 
+		 date: 2014.5.27
+		 desc: 根据监管公司 Name,获得监管公司的id
+	 -->
+	<select id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.isDeleteSupervEnterpriseById"
+		    parameterClass="java.lang.String" 
+		    resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT
+				count(p.supv_id)
+			FROM
+				pledge p
+			WHERE
+			p.supv_id = #supvId#
+		]]>
+	</select>	
+
+</sqlMap>

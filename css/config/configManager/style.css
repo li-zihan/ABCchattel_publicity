@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* CSS Document */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {font-family: Arial, Helvetica, sans-serif;font-size: 12px;margin: 0;padding: 0; list-style:none;}
+table {border-collapse: collapse;border-spacing: 0}
+img {border: 0;}
+ol, ul {list-style: none}
+h1, h2, h3, h4, h5, h6 {font-size: 100%;font-weight: normal}
+a {text-decoration: none}
+input:focus{ outline:none;}
+.clearfix:before, .clearfix:after {display: table;content: "";}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;}
+.clr {clear: both}
+
+.content{ width:1000px; margin: 0 auto; }
+.head{ width:100%; height:89px;}
+.logo{ width:277px; height:73px; float:left;}
+.tel{ margin-left:530px; margin-top:30px; float:left;}
+/**************************head**************************/
+.nav{ width:100%; height:40px; background:url(../../../images/common/nav_bg.jpg) repeat-x; margin-top:4px;}
+.nav .nav_li{ width:560px; height:40px; margin-left:20px; float:left;}
+.nav .nav_li ul li{ height:40px; line-height:40px; width:80px; float:left; margin-right:25px;}
+.nav .nav_li ul li a{ display:block; width:80px; height:40px; text-align:center; font-size:16px; font-family:"Microsoft YaHei"; color:#000;}
+.nav .nav_li ul li a:hover{ text-decoration:underline;}
+.nav .nav_02{ width:280px; /*height:26px;*/ float:left; margin-top:7px; margin-left:120px;}
+.nav .nav_02 ul li{ height:26px; float:left; line-height:26px; font-size:13px;font-family:"Microsoft YaHei"; color:#000; margin-left:25px;}
+.nav .nav_02 ul li a{ color:#000;}
+.nav .nav_02 ul li a:hover{text-decoration:underline;}
+.nav .nav_02 .yonghu{ background:url(../../../images/common/yonghu_bg.jpg) no-repeat 0 0; padding-left:38px;}
+/******************************nav******************************/
+.container { width:1000px; height:auto; margin:0 auto; }
+.main{height:auto;width:1000px; margin:0 auto; float:left;}
+
+
+/****************************************main**********************************************/
+.footer{ background:url(../../../images/chattel/fot.png);width:1000px; height:122px; margin:0 auto;}
+.footer_div{ padding-top:15px; text-align:center;}
+.footer_li a, .footer_li img{margin:0 5px; vertical-align:middle;font-size: 14px}
+.footer p{ text-align:center;  height:16px;padding-top:9px;font-size: 14px}
+.fontcolor{color:#333;font-family:"Microsoft YaHei"};
+.page { width:auto; float:right; margin-top:8px; margin-bottom:1px; margin-right:20px;}
+
+

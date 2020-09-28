@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="CollateralType" type="com.zwhs.chattel.entities.CollateralType"/>
+	<typeAlias alias="CollateraVariety" type="com.zwhs.chattel.entities.CollateraVariety"/>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 担保品所有类别查询
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateralTypeDao.getCollateralType" resultClass="CollateralType">
+		<![CDATA[
+			SELECT ctype_id	ctypeId 															
+				 , ctype_name ctypeName
+			FROM collateral_type
+		]]>
+	</select>
+	
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 查询上一级银行设置的担保品
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getCollateraVariety" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				cv.cvar_id,
+				cv.cvar_name,
+				cv.specification,
+				cv.update_time,
+				type.ctype_id,
+				type.ctype_name
+			FROM
+				collatera_variety cv,
+				collatera_organization_rel cr,
+				collateral_type type
+			WHERE
+				cv.cvar_id = cr.cvar_id
+			AND cv.ctype_id = type.ctype_id
+			AND cr.org_id =  (SELECT parent_id
+								FROM organization 
+							   WHERE org_id = #orgId#
+							 )
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 查询顶级银行担保品品种
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getCollateraVarietyAll" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				cv.cvar_id,
+				cv.cvar_name,
+				cv.specification,
+				cv.update_time,
+				type.ctype_id,
+				type.ctype_name
+			FROM
+				collatera_variety cv,
+				collateral_type type
+			WHERE cv.ctype_id = type.ctype_id
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 查询顶级银行担保品品种（含子类）
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getSubCollateraVarietyAll" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			select cv1.cvar_id 
+       			 , cv1.cvar_name
+		 		 , cv1.varparent_id
+		   		 , (select cparent.cvar_name
+					  from collatera_variety cparent 
+				     where cv1.varparent_id = cparent.cvar_id
+				   ) varparent_name
+		 		 , type.ctype_id
+     			 , type.ctype_name
+		 		 , cv1.update_time
+  			  from collatera_variety cv1
+     			 , collateral_type type 
+     		 where not exists(select cv1.cvar_id
+								from collatera_variety cv2
+                  			   where cv1.cvar_id = cv2.varparent_id)
+			   AND cv1.ctype_id = type.ctype_id
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.26
+		desc: 查询上一级orgId
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.queryParentIdByOrgId" parameterClass="java.lang.String" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT parent_id
+			  FROM organization 
+		     WHERE org_id = #orgId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 组织机构设置给自己的担保品
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getCollateraVarietyByOrgId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				cv.cvar_id,
+				cv.cvar_name,
+				cv.specification,
+				cv.update_time,
+				type.ctype_id,
+				type.ctype_name
+			FROM
+				collatera_variety cv,
+				collatera_organization_rel cr,
+				collateral_type type
+			WHERE
+				cv.cvar_id = cr.cvar_id
+			AND cv.ctype_id = type.ctype_id
+			AND cr.org_id = #orgId#
+		]]>
+	</select>
+	
+	
+	<!--
+		author: jimmyan
+		date: 2014.5.29
+		desc: 组织机构设置给自己的担保品(含子类)
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getSubCollateraVarietyByOrgIdMap" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+			select cv1.cvar_id
+			     , cv1.cvar_name
+			     , cv1.varparent_id 
+			     , (select cparent.cvar_name
+					  from collatera_variety cparent 
+					 where cv1.varparent_id = cparent.cvar_id
+				   ) varparent_name
+				 , type.ctype_id
+			     , type.ctype_name
+			     , cv1.update_time
+			  from collatera_variety cv1
+				 , collatera_organization_rel cr
+			     , collateral_type type
+			where not exists(select cv1.cvar_id
+							   from collatera_variety cv2
+			                  where cv1.cvar_id = cv2.varparent_id
+			                 )
+			  AND cv1.cvar_id = cr.cvar_id
+			  AND cv1.ctype_id = type.ctype_id
+			  AND cr.org_id = #orgId#
+			  AND concat(type.ctype_name,cv1.cvar_name,IFNULL((select cparent.cvar_name
+																  from collatera_variety cparent 
+																 where cv1.varparent_id = cparent.cvar_id
+															   ),'')
+				   ) like #input#
+			LIMIT #pageNo# ,#pageSize#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.5.29
+		desc: 组织机构设置给自己的担保品(含子类)
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getSubCollateraVarietyByOrgId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			select cv1.cvar_id
+			     , cv1.cvar_name
+			     , cv1.varparent_id 
+			     , (select cparent.cvar_name
+					  from collatera_variety cparent 
+					 where cv1.varparent_id = cparent.cvar_id
+				   ) varparent_name
+				 , type.ctype_id
+			     , type.ctype_name
+			     , cv1.update_time
+			  from collatera_variety cv1
+				 , collatera_organization_rel cr
+			     , collateral_type type
+			where not exists(select cv1.cvar_id
+							   from collatera_variety cv2
+			                  where cv1.cvar_id = cv2.varparent_id
+			                 )
+			  AND cv1.cvar_id = cr.cvar_id
+			  AND cv1.ctype_id = type.ctype_id
+			  AND cr.org_id = #orgId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 组织机构设置给自己的担保品
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getCollateraVarietyLike" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				cv.cvar_id,
+				cv.cvar_name,
+				cv.specification,
+				cv.update_time,
+				type.ctype_id,
+				type.ctype_name
+			FROM
+				collatera_variety cv,
+				collatera_organization_rel cr,
+				collateral_type type
+			WHERE
+				cv.cvar_id = cr.cvar_id
+			AND cv.ctype_id = type.ctype_id
+			AND cr.org_id = #orgId#
+			AND concat(type.ctype_name,cv.cvar_name,IFNULL((select cparent.cvar_name
+															  from collatera_variety cparent 
+															 where cv1.varparent_id = cparent.cvar_id
+														   ),'')
+				   ) like #input#
+
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.insertCollateraOrganization" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into collatera_organization_rel
+			     values (  #org_id#
+					     , #cvar_id#
+			     )
+		]]>
+	</insert>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.29
+		desc: 设置担保品给用户
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.insertCollateraUser" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into user_variety_rel
+			     values (  #user_id#
+					     , #cvar_id#
+			     )
+		]]>
+	</insert>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.16
+		desc: 
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.queryCollateraOrganizationByCvarId" parameterClass="java.lang.String" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT
+				cr.org_id
+			FROM
+				collatera_organization_rel cr
+			WHERE cr.cvar_id = #cvarId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.16
+		desc: 删除组织机构担保品关联表
+	 -->
+	<delete id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.deleteCollateraOrganizationByOrgId" parameterClass="java.lang.String">
+		<![CDATA[
+			DELETE FROM collatera_organization_rel
+				  WHERE org_id = #orgId#
+		]]>
+	</delete>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.16
+		desc: 删除用户担保品关联表
+	 -->
+	<delete id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.deleteCollateraUserByUserId" parameterClass="java.lang.String">
+		<![CDATA[
+			DELETE FROM user_variety_rel
+				  WHERE user_id = #user_id#
+		]]>
+	</delete>
+			
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 设置给用户自己的担保品
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getCollateraVarietyByUserId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				cv.cvar_id,
+				cv.cvar_name,
+				cv.specification,
+				cv.update_time,
+				type.ctype_id,
+				type.ctype_name
+			FROM
+				collatera_variety cv,
+				user_variety_rel ur,
+				collateral_type type
+			WHERE
+				cv.cvar_id = ur.cvar_id
+			AND cv.ctype_id = type.ctype_id
+			AND ur.user_id = #userId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.14
+		desc: 设置给用户自己的担保品
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getSubCollateraVarietyByUserId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			select cv1.cvar_id
+			     , cv1.cvar_name
+			     , cv1.varparent_id 
+			     , (select cparent.cvar_name
+					  from collatera_variety cparent 
+					 where cv1.varparent_id = cparent.cvar_id
+				   ) varparent_name
+				 , type.ctype_id
+			     , type.ctype_name
+			     , cv1.update_time
+			  from collatera_variety cv1
+				 , user_variety_rel ur
+			     , collateral_type type
+			where not exists(select cv1.cvar_id
+							   from collatera_variety cv2
+					  where cv1.cvar_id = cv2.varparent_id
+					 )
+			  AND cv1.cvar_id = ur.cvar_id
+			  AND cv1.ctype_id = type.ctype_id
+			  AND ur.user_id = #userId#
+		]]>
+	</select>
+	
+	<!--
+		author: bianrx
+		desc: 初始化类别数据
+	 -->
+	<insert id="collateral_type_init" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into collateral_type
+			     values (  #ctype_id#
+					     , #ctype_name#
+					     , #update_time#
+			     )
+		]]>
+	</insert>
+	
+	<!--
+		author: bianrx
+		desc: 初始化品种数据
+	 -->
+	<insert id="collatera_variety_init" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into collatera_variety
+			     values (  #cvar_id#
+					     , #ctype_id#
+					     , #cvar_name#
+					     , #update_time#
+					     , #specification#
+			     )
+		]]>
+	</insert>
+	
+	<!--
+		author: jimmyan
+		date: 2014.5.29
+		desc: 查询出所有担保品叶子节点数（分页）
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.selectCollateralCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 	<![CDATA[
+			select count(cv1.cvar_id)
+			  from collatera_variety cv1
+				 , collatera_organization_rel cr
+			     , collateral_type type
+			where not exists(select cv1.cvar_id
+							   from collatera_variety cv2
+			                  where cv1.cvar_id = cv2.varparent_id
+			                 )
+			  AND cv1.cvar_id = cr.cvar_id
+			  AND cv1.ctype_id = type.ctype_id
+			  AND cr.org_id = #orgId#
+			  AND concat(type.ctype_name,cv1.cvar_name,IFNULL((select cparent.cvar_name
+																  from collatera_variety cparent 
+																 where cv1.varparent_id = cparent.cvar_id
+															   ),'')
+				   ) like '%$input$%'
+		]]>
+	 </select>
+	 
+	<!--
+		author: jimmyan
+		date: 2014.5.29
+		desc: 查询出所有担保品叶子节点
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getSubCollateraVarietyByCvarId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			select cv.cvar_id cvarId
+				  ,cv.cvar_name cvarName
+				  ,cv.ctype_id ctypeId
+				  ,cv.specification specification
+			  from collatera_variety cv
+			  LEFT JOIN user_variety_rel uvr
+			  ON cv.cvar_id = uvr.cvar_id
+			 where cv.varparent_id = #cvarId# 
+				and uvr.user_id = #userId#
+		]]>
+	 </select>
+	 
+	<!--
+		author: jimmyan
+		date: 2014.5.29
+		desc: 查询出所有担保品叶子节点
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getExsitSubCollateraVarietyByCvarId" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+	 	<![CDATA[
+			select cv.varparent_id
+			  from collatera_variety cv
+			  LEFT JOIN user_variety_rel uvr
+			  ON cv.cvar_id = uvr.cvar_id
+			 where cv.cvar_id = #cvarId#
+				and uvr.user_id = #userId#
+		]]>
+	 </select>
+	 
+	<!--
+		author: jimmyan
+		date: 2014.5.29
+		desc: 查询出所有担保品叶子节点
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.updateCollateraLoad" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			select cv1.cvar_id 
+       			 , cv1.cvar_name
+		 		 , cv1.varparent_id
+		   		 , (select cparent.cvar_name
+					  from collatera_variety cparent 
+				     where cv1.varparent_id = cparent.cvar_id
+				   ) varparent_name
+		 		 , type.ctype_id
+     			 , type.ctype_name
+		 		 , cv1.update_time
+  			  from collatera_variety cv1
+     			 , collateral_type type 
+     		 where not exists(select cv1.cvar_id
+								from collatera_variety cv2
+                  			   where cv1.cvar_id = cv2.varparent_id)
+			   AND cv1.ctype_id = type.ctype_id
+				 AND cv1.cvar_id = #cvar_id#
+		]]>
+	 </select>
+	
+</sqlMap>

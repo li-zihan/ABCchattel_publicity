@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	min-height:1000px;
+	}
+
+
+/*货物清单 Begin*/	
+div.goodsInput1,
+div.goodsInput2,
+div.goodsInput3,
+div.addressInput1,
+div.addressInput2,
+div.oldUser,
+div.newAddress{
+	display:none;
+	margin:5px 0px;
+	}	
+div.userHidden{
+	display:none;
+	}
+div.goodsInput2,
+div.addressInput1{
+	display:block;
+	}	
+	
+input.addGoodsByBill,	
+input.addGoodsByBar{
+
+	}
+input.addGoodsByName{
+	width:400px;
+	}	
+
+.goodsList{
+	display:none;
+	}
+	
+input.innerTableInput{
+	background:#FFF;
+	border:none;
+	margin:0px;
+	padding:0px;
+	width:100%;
+	font-size:13px;
+	color:#333;
+	}
+input.innerTableCheckInput{
+	margin:0px;
+	padding:0px;
+	}
+input.goodsNumInput{
+	width:30%;
+	text-align:center;
+	}
+	
+a.setUp,
+a.setDown{
+	font-size:18px;
+	color:#999;
+	font-weight:600;
+	}
+a.setUp:hover,
+a.setDown:hover{
+	color:#FC0;
+	}
+a.setUp:active,
+a.setDown:active{
+	color:#F00;
+	}
+
+input.package{
+
+}
+/*货物清单 End*/	
+
+/*客户信息 Begin*/	
+input.userAddress,
+select.userAddress{
+	min-width:400px;
+	}
+
+select.userAreaPart{
+	min-width:100px;
+	}
+
+div.toUserInf{
+	margin-top:20px;
+	}
+
+
+
+/*客户信息 End*/	
+
+input.bringPay{
+	display:none;
+	}	
+	

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="city" type="com.zwhs.chattel.entities.City"/>
+	<typeAlias alias="province" type="com.zwhs.chattel.entities.Province"/>
+	
+	<!--
+		author: bianrx
+		date: 2014.3.12
+		desc: 根据省级ID查询该省所属城市
+	 -->
+	<select id="loadCitysByProvince" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.City">
+		<![CDATA[
+			SELECT c.city_id cityId
+			     , c.city_name cityName
+			  FROM city c 
+			     , province p 
+			 WHERE c.pro_id = p.pro_id
+			   and p.pro_id = #provinceId#
+		]]>
+	</select>
+	
+	<!-- 查询所有的省 -->
+	<select id="loadProvinces" resultClass="com.zwhs.chattel.entities.Province">
+		<![CDATA[
+			SELECT pro_id proId, pro_name proName from province order by (pro_id +0) 
+		]]>
+	</select>
+		
+	<!-- 根据市ID查询该市所属省 -->
+	<select id="loadCityByCityId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.City">
+		<![CDATA[
+			SELECT c.city_id cityId
+			     , c.city_name cityName
+			     , c.pro_id proId
+			  FROM city c
+			 WHERE c.city_id = #cityId#
+		]]>
+	</select>
+	
+	<!--
+		author: bianrx
+		date: 2014.5.26
+		desc: 查询一组城市id
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CityDao.getCitys" resultClass="com.zwhs.chattel.entities.City">
+		<![CDATA[
+			SELECT c.city_id cityId
+			     , c.city_name cityName
+			  FROM city c
+		]]>
+	</select>
+	
+	
+</sqlMap>

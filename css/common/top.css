@@ -1,0 +1,65 @@
+@charset "utf-8";
+/* CSS Document */
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {font-family: Arial, Helvetica, sans-serif;font-size: 12px;margin: 0;padding: 0}
+body{font-family: Arial, Helvetica, sans-serif;font-size: 12px;margin-left: 0px;margin-bottom: 0px;padding: 0;}
+table {border-collapse: collapse;border-spacing: 0}
+img {border: 0;}
+ol, ul {list-style: none}
+h1, h2, h3, h4, h5, h6 {font-size: 100%;font-weight: normal}
+a {text-decoration: none}
+.clearfix:before, .clearfix:after {display: table;content: "";}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;}
+.clr {clear: both}
+/*以上为防止兼容性问题及其他全体声明*/
+.content{ width:1000px; margin:0 auto;}
+.head{ width:100%; height:89px;}
+.logo{ width:277px; height:73px; float:left;}
+.tel{ margin-left:530px; margin-top:30px; float:left;}
+.xian{ width:100%; height:16px;}
+/**************************head部分结束**************************/
+.nav{ width:100%; height:40px; background:url(../../images/common/nav_bg.jpg) repeat-x; margin-top:4px;}
+.nav .nav_li{width: 550px;
+height: 40px;
+float: left;
+margin-left: 20px}
+.nav .nav_li ul li{ height:40px; line-height:40px; width:107px; float:left;}
+.bg{}
+.nav .nav_li ul li a{ text-decoration:none ;display:block; width:107px; height:40px; text-align:center; font-size:16px; font-family:"微软雅黑"; color:#000;}
+.vvv{background:url(../../images/common/beij5.png)}
+.nav .nav_02{ width:400px; /*height:26px;*/ float:left; margin-top:7px; margin-left:10px;}
+.nav .nav_02 ul li{ height:26px; float:left; line-height:26px; font-size:13px;font-family:"微软雅黑"; color:#000; margin-left:25px;}
+.nav .nav_02 ul li a{ color:#000;}
+.nav .nav_02 ul li a:hover{text-decoration:none;}
+.nav .nav_03{ width:400px; /*height:26px;*/ float:left; margin-top:7px; margin-left:550px;}
+.nav .nav_03 ul li{ height:26px; float:left; line-height:26px; font-size:13px;font-family:"微软雅黑"; color:#000; margin-left:25px;}
+.nav .nav_03 ul li a{ color:#000;}
+.nav .nav_03 ul li a:hover{text-decoration:none;}
+.mycom{font-family: "微软雅黑";
+font-size: 14px;
+height: 35px;
+width: 80px;
+margin-top: -8px;
+padding-top: 7px;
+line-height: 30px;
+/* padding-left: 19px; */
+padding-right: -3px;
+margin-left: -17px;
+text-align: center;
+background:url(../../images/common/mycommon.png)
+}
+.mycom1{font-family: "微软雅黑";
+font-size: 14px;
+height: 35px;
+width: 80px;
+margin-top: -10px;
+padding-top: 8px;
+line-height: 30px;
+/* padding-left: 19px; */
+padding-right: -3px;
+margin-left: -17px;
+text-align: center;
+font-size:14px;
+}
+.nav .nav_02 .yonghu{padding-left:36px;}
+.nav .nav_03 .yonghu{padding-left:36px;}

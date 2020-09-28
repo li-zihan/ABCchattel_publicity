@@ -1,0 +1,100 @@
+@charset "utf-8";
+/* CSS Document */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, fieldset, input,select, textarea, p, blockquote, th, td {font-family:"Microsoft YaHei";font-size: 12px;margin: 0;padding: 0}
+table {border-collapse: collapse;border-spacing: 0}
+img {border: 0;}
+ol, ul {list-style: none}
+h1, h2, h3, h4, h5, h6 {font-size: 100%;font-weight: normal}
+a {text-decoration: none}
+input:focus{ outline:none;}
+.clearfix:before, .clearfix:after {display: table;content: "";}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;}
+.clr {clear: both}
+ul:after{content:''; display:block; clear:both; visibility:hidden; height:0;}
+ul{zoom:1;}
+/*以上为防止兼容性问题及其他全体声明*/
+.content{ width:1000px;}
+.head{ width:100%; height:89px;}
+.logo{ width:277px; height:73px; float:left;}
+.tel{ margin-left:530px; margin-top:30px; float:left;}
+.xian{ width:100%; height:16px;}
+/**************************head部分结束**************************/
+.nav{ width:100%; height:40px; background:url(../../images/chattel/nav_bg.jpg) repeat-x; margin-top:4px;}
+.nav .nav_li{ width:560px; height:40px; margin-left:20px; float:left;}
+.nav .nav_li ul li{ height:40px; line-height:40px; width:80px; float:left; margin-right:25px;}
+.nav .nav_li ul li a{ display:block; width:80px; height:40px; text-align:center; font-size:16px; font-family:"Microsoft YaHei"; color:#000;}
+.nav .nav_li ul li a:hover{ text-decoration:underline;}
+.nav .nav_02{ width:280px; /*height:26px;*/ float:left; margin-top:7px; margin-left:120px;}
+.nav .nav_02 ul li{ height:26px; float:left; line-height:26px; font-size:13px;font-family:"Microsoft YaHei"; color:#000; margin-left:25px;}
+.nav .nav_02 ul li a{ color:#000;}
+.nav .nav_02 ul li a:hover{text-decoration:underline;}
+.nav .nav_02 .yonghu{ background:url(../../images/chattel/yonghu_bg.jpg) no-repeat 0 0; padding-left:38px;}
+/******************************nav结束******************************/
+.main{ width:1000px; height:1105px;}
+.height_35{ height:35px; width:900px;}
+.main_01{ width:900px; height:279px; margin-left:52px;margin-top:-24px}
+.main_02,.main_03,.main_04{ margin-left:52px; margin-top:15px;}
+.main_content img{ display:block; width:10px; height:26px; float:left; margin-left:5px;}
+.main_content .form{ padding-top:5px; padding-left:30px;}
+.main_content ul li{ width:399px;font-family:"Microsoft YaHei";font-size:14px; height:26px; line-height:26px; float:left; margin-top:13px; word-spacing:0px;}
+.main_content .margin_right{ margin-right:22px;}
+.margin_right input {}
+.main_content input{ height:24px; width:250px; float:left; border:1px #ccc solid; line-height:24px;}
+.main_content select{ height:26px; width:252px; font-family:"Microsoft YaHei"; float:left; }
+.main_content .selecty{ height:26px; width:126px; float:left; border:1px #ccc solid;}
+.main_content span{ height:26px; width:130px; text-align:left; display:block; float:left;}
+.biaoti_01{width:880px; height:38px; background:url(../../images/chattel/lan.png) no-repeat 8px 0; line-height:38px; font-size:15px; font-weight:bolder; padding-left:20px;}
+.main_01_content{ width:900px; height:236px; background:url(../../images/chattel/main_01_bg.png) no-repeat 0 0;}
+.main_content .changbiaodan{ width:900px;}
+.main_content .changbiaodan textarea:focus{ outline:none;}
+/***************************/
+.main_02{ width:900px; height:279px;}
+.main_02_content{ width:900px; height:236px; background:url(../../images/chattel/main_01_bg.png) no-repeat 0 0;}
+.main_03{ width:900px; height:180px;}
+.main_03_content{ width:900px; height:130px; background:url(../../images/chattel/main_03_bg.png) no-repeat 0 0;}
+.main_04{ width:900px; height:250px;}
+.main_04_content{ width:900px; height:210px; background:url(../../images/chattel/main_04_bg.png) no-repeat 0 0;}
+
+.main_content .biaodan_03{height:26px; width:212px; border:1px #ccc solid}
+.main_content .more{ width:36px; margin-left:0px; cursor:pointer;}
+/**************************************/
+.anniu{ margin-top:15px;}
+.anniu a{ width: 116px;
+height: 43px;
+background: url(../../images/chattel/quxiao.png) no-repeat 0 0;
+float: left;
+margin-left: 340px;
+cursor: pointer;
+text-align: center;
+padding-top: 10px;
+font-size: 16px;
+font-family: "Microsoft YaHei";
+font-weight: bold;
+color: black;
+}
+.anniu a:hover{ width: 116px;
+height: 43px;
+background: url(../../images/chattel/danji.png) no-repeat 0 0;
+float: left;
+margin-left: 340px;
+cursor: pointer;
+text-align: center;
+padding-top: 12px;
+font-size: 16px;
+font-family: "Microsoft YaHei";
+font-weight: bold;
+color: black;
+}
+
+/****************************************main结束**********************************************/
+.footer{ background:url(../../images/chattel/footer_bg.jpg) no-repeat top center; width:1000px; height:122px;}
+.footer_li{ padding-top:25px; margin-left:125px;}
+.footer_li ul li{ float:left; margin-left:15px;}
+.footer_li ul li a{ color:#000;}
+.footer_li ul li a:hover{ color:#333;}
+.footer_li02 ul li{ float:left; width:370px; margin-left:130px; margin-top:10px;}
+
+
+
+

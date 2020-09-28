@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="CollateraVariety" type="com.zwhs.chattel.entities.CollateraVariety"/>
+	<!-- 
+		author: jimmyan
+		date: 2014.4.17
+		desc: 查询担保品
+		table: collatera_variety,user_variety_rel
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getCollateraVarietyListByUserId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.CollateraVariety">
+		<![CDATA[
+			SELECT 
+				cvar.cvar_id cvarId,
+				cvar.ctype_id ctypeId,
+				cvar.cvar_name cvarName,
+				cvar.specification specification
+			  FROM collatera_variety cvar 
+			  LEFT JOIN user_variety_rel uvr
+			  ON cvar.cvar_id = uvr.cvar_id
+			WHERE uvr.user_id = #userId#
+		]]>
+	</select>
+	
+	<!-- 
+		author: jimmyan
+		date: 2014.4.17
+		desc: 查询担保品且进行拼接
+		table: collatera_variety,user_variety_rel
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.CollateraVarietyDao.getSubCollateraVarietyListByUserId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.CollateraVariety">
+		<![CDATA[
+			select cv1.cvar_id cvarId
+			     , CONCAT(IFNULL((select cparent.cvar_name
+									from collatera_variety cparent 
+								 where cv1.varparent_id = cparent.cvar_id
+								 ),''),'-',cv1.cvar_name) cvarName
+			     , cv1.varparent_id varparentId
+			     , (select cparent.cvar_name
+					  from collatera_variety cparent 
+					 where cv1.varparent_id = cparent.cvar_id
+				   ) varparentName
+				 , type.ctype_id ctypeId
+			     , type.ctype_name ctypeName
+			     , cv1.update_time updateTime
+			  from collatera_variety cv1
+				 , user_variety_rel ur
+			     , collateral_type type
+			where not exists(select cv1.cvar_id
+							   from collatera_variety cv2
+					  where cv1.cvar_id = cv2.varparent_id
+					 )
+			  AND cv1.cvar_id = ur.cvar_id
+			  AND cv1.ctype_id = type.ctype_id
+			  AND ur.user_id = #userId#
+		 GROUP BY cvarName
+		]]>
+	</select>
+	
+
+	
+</sqlMap>

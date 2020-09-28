@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="orgType" type="com.zwhs.chattel.entities.OrgType" />
+	<!--
+		author: BoCheng
+		date: 2014.5.7
+		desc: 
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.BankTypeDao.selectBankTypeList" resultClass="com.zwhs.chattel.entities.BankType">
+		<![CDATA[
+			SELECT type.type_id typeId
+			     , type.type_name typeName
+			  FROM bank_type type
+		]]>
+	</select>
+</sqlMap>

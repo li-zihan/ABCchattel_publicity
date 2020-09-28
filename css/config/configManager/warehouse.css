@@ -1,0 +1,37 @@
+@charset "utf-8";
+.main_right_div{
+	width:700px;
+	height:254px;
+	background-color:#F9F8F8;
+	margin-left:60px;
+	padding-bottom:10px;   
+    margin-top:25px;
+	border:#e8e8e8 solid 1px;
+	}
+.main_right_div_form{
+	font-family:"Microsoft YaHei";
+	font-size:14px;
+	text-align:center;
+ 	margin-top:10px;}
+.main_right_div_form_title{
+	font-family:"Microsoft YaHei";
+	font-size:14px;
+	font-weight: bold;
+	text-align:center;}
+.main_right_div_form_select{
+	font-size:16px;
+	margin-top:10px;
+	margin-left:3px;
+	text-align:center;
+	}
+.main_right_div_form_btn{
+	font-size:16px;
+	margin-top:20px;
+	margin-right:25px;
+	margin-left:25px}
+	
+.main_content_warehouse{
+	font-size:12px;
+	padding-top:15px;
+	font-weight:bolder;
+}

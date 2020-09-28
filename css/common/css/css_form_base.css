@@ -1,0 +1,56 @@
+@charset "utf-8";
+/* CSS Document */
+form{
+	width:100%;
+	margin:0px;
+	padding:0px;
+	}
+
+input,select,textarea{
+	margin:5px 15px 5px 0px;
+	vertical-align:middle;
+	font-size:12px;
+	}
+textarea{
+	vertical-align:top;
+	}
+
+label{
+	margin-left:10px;
+	}
+	
+input.text,
+textarea,
+select{
+	min-width:200px;
+	background: #fff;
+	border:#999 1px solid;
+	}
+
+a{
+	cursor:pointer;
+	}
+		
+input.short,
+select.short{
+	min-width:80px;
+	}
+	
+	
+/*表单验证样式*/
+ul.errorMessage {
+	color: red;
+	font-size: 12px;
+}
+	
+
+span.errorText{
+	font-size: 12px;
+	color:red;
+	margin-left:10px;
+	}
+
+span.red{
+	font-size: 12px;
+	color:red;
+	}

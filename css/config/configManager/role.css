@@ -1,0 +1,22 @@
+@charset "utf-8";
+.main_content_role{
+	font-size:12px;
+	padding-top:15px;
+	font-weight:bolder;
+}
+#role_table_id td{
+	   background-color:#F9F8F8;
+	   height:30px;
+	   padding-top:18px;
+	   }
+.role_table_id_td{
+	height:35px;
+	width:500px;
+	}
+#role_table_id{
+	border:1px solid #CcCcCc;	
+	width:700px;
+	line-height:50px;
+	margin-left:50px;
+	margin-top:10px;
+	}

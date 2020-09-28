@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="PurchaseInvoiceNo" type="com.zwhs.chattel.entities.PurchaseInvoiceNo"/>
+
+	<!--
+		author: bianrx
+		date: 2014.3.12
+		desc: 插入采购合同号
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.PurchaseInvoiceNoDao.insertPurchaseInvoiceNo" parameterClass="PurchaseInvoiceNo">
+		<![CDATA[
+		INSERT INTO  purchase_invoice_no(   id																
+						     , purchase_invoice_no																
+						     , pledge_id																
+						     )															
+				      VALUES ( #id#																
+						     , #purchaseInvoiceNo#																
+						     , #pledgeId#																
+						     )											
+		]]>
+	</insert>
+	
+	<select id="com.zwhs.chattel.dao.impl.PurchaseInvoiceNoDao.getInvoiceNoByPledageId" parameterClass="java.lang.String" resultClass="java.util.HashMap" >
+		<![CDATA[
+			SELECT
+					id,
+					purchase_invoice_no,
+					pledge_id
+					FROM
+					purchase_invoice_no
+				where pledge_id=#pledgeId#
+		]]>
+	</select>
+	
+	<delete id="com.zwhs.chattel.dao.impl.PurchaseInvoiceNoDao.deleteInvoiceNo" parameterClass="java.lang.String" >
+		<![CDATA[
+			delete from purchase_invoice_no where pledge_id=#pledgeId#
+		]]>
+	</delete>
+</sqlMap>

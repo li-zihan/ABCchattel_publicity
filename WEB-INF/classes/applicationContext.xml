@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+	    http://www.springframework.org/schema/beans 
+	    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd" default-autowire="byName">
+
+	<!-- 加载类路径（classpath：）下的属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+
+	<!-- 扫描 com.derun.dyclub包下的带注解的组件 -->
+	<context:component-scan base-package="com.zwhs.chattel" />
+    <!-- memcached配置 -->   
+    <aop:aspectj-autoproxy />    
+ <!--
+    <bean id="memcachedClient" class="com.danga.MemCached.MemCachedClient">
+
+	</bean>
+    <bean id="cacheAop" class="com.zwhs.chattel.aop.CacheAop" />  
+		<bean id="memcachedPool" class="com.danga.MemCached.SockIOPool" factory-method="getInstance" init-method="initialize" destroy-method="shutDown" >
+
+		<property name="servers">
+			<list>
+				<value>${memcache.server}</value>
+			</list>
+		</property>
+		<property name="initConn">
+			<value>${memcache.initConn}</value>
+		</property>
+		<property name="minConn">
+			<value>${memcache.minConn}</value>
+		</property>
+		<property name="maxConn">
+			<value>${memcache.maxConn}</value>
+		</property>
+		<property name="maintSleep">
+			<value>${memcache.maintSleep}</value>
+		</property>
+		<property name="nagle">
+			<value>${memcache.nagle}</value>
+		</property>
+		<property name="socketTO">
+			<value>${memcache.socketTO}</value>
+		</property>
+	</bean>-->
+	<!-- RA申请、验证bean -->
+	<bean id="raApply" class="com.zwhs.chattel.ra.RaApply">
+		<constructor-arg>
+			<value>${ra.wsdl}</value>
+		</constructor-arg>
+	</bean>
+	<!-- 配置数据源，c3p0数据库连接池 -->
+	<bean id="abstractDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.main.driverClass}" />
+		<property name="jdbcUrl" value="${jdbc.main.jdbcUrl}" />
+		<property name="user" value="${jdbc.main.user}" />
+		<property name="password" value="${jdbc.main.password}" />
+		<property name="minPoolSize" value="${jdbc.main.minPoolSize}" />
+		<property name="maxPoolSize" value="${jdbc.main.maxPoolSize}" />
+		<property name="initialPoolSize" value="${jdbc.main.initialPoolSize}" />
+		<property name="acquireIncrement" value="${jdbc.main.acquireIncrement}" />
+		<property name="acquireRetryAttempts" value="${jdbc.main.acquireRetryAttempts}" />
+		<!--两次连接中间隔时间，单位毫秒。Default: 1000 -->
+		<property name="acquireRetryDelay" value="1000" />
+		<!--如果设为true那么在取得连接的同时将校验连接的有效性。Default: false -->
+		<property name="testConnectionOnCheckin" value="true" />
+		<property name="automaticTestTable" value="Test" />
+		<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+		<property name="maxIdleTime" value="25000" />
+		<!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+		<property name="idleConnectionTestPeriod" value="18000" />
+	</bean>
+
+	<!-- Spring整合Ibatis：sqlMapClient -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<!-- 加载类路径下的SqlMapConfig.xml文件 -->
+		<property name="configLocation" value="classpath:SqlMapConfig.xml"></property>
+		<!-- 引用 abstractDataSource数据源 -->
+		<property name="dataSource" ref="abstractDataSource" />
+	</bean>
+
+	<!-- Ibatis模板 -->
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 开启事务（基于注解） --> 
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="abstractDataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" /> 
+</beans>

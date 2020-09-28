@@ -1,0 +1,34 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	min-height:500px;
+	}
+
+input,select,textarea,img{
+	margin:5px 25px 5px 0px;
+	}
+input.text,
+textarea,
+select{
+	min-width:150px;
+	}
+
+input.orderId{
+	min-width:300px;
+	}
+input.innerTableCheckInput{
+	margin:0px;
+	padding:0px;
+	}
+
+input.timeSel_1{
+	width:133px;
+	}
+input.timeSel_2{
+	width:100px;
+	}
+
+input.submitButton{
+	min-width:100px;
+	}	
+	

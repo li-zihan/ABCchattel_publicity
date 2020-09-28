@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN" "http://www.getahead.ltd.uk/dwr/dwr10.dtd">
+<dwr>  
+<allow>
+ 
+	<convert converter="bean" match="com.zwhs.chattel.entities.City" />
+	<convert converter="bean" match="com.zwhs.chattel.entities.Province" />
+	<convert converter="bean" match="com.zwhs.chattel.entities.Warehouse" />
+	<convert converter="bean" match="com.zwhs.chattel.entities.Manager" />
+	<convert converter="bean" match="com.zwhs.chattel.entities.SupervisionEnterprise" />
+	<convert converter="map" match="java.util.Map" />
+	
+	<!-- ***************************************************************************** -->
+	
+	<create javascript="areaDwr" creator="spring">
+		<param name="beanName" value="areaDwr" />
+	</create>
+	
+	<create javascript="warehouseController" creator="spring">
+		<param name="beanName" value="warehouseController"></param>
+	</create>
+	
+	<create javascript="warehouseService" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.service.config.impl.WarehouseService"></param>
+	</create>
+	
+	<create javascript="roleController" creator="spring">
+		<param name="beanName" value="roleController"></param>
+	</create>
+	
+	<create javascript="accountController" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.web.account.controller.AccountController"></param>
+	</create>
+	
+	<create javascript="userController" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.web.config.controller.UserController"></param>
+	</create>
+	
+	<create javascript="userPasswordController" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.web.account.controller.UserPasswordController"></param>
+	</create>
+	
+	<create javascript="userService" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.service.config.impl.UserService"></param>
+	</create>
+
+	<create javascript="validateDwr" creator="spring">
+		<param name="beanName" value="validateDwr" />
+	</create>
+	
+	<create javascript="chattelController" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.web.chattel.ChattelController"></param>
+	</create>
+	
+	<create javascript="organizationController" creator="spring">
+		<param name="beanName" value="organizationController"></param>
+	</create>
+	
+	<create javascript="organizationService" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.service.config.impl.OrganizationService"></param>
+	</create>
+	
+	<create javascript="supervisionEnterpriseService" creator="spring">
+		<param name="beanName" value="com.zwhs.chattel.service.config.impl.SupervisionEnterpriseService"></param>
+	</create>
+</allow> 
+</dwr> 

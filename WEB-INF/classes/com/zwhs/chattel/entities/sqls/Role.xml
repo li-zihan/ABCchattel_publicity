@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="role" type="com.zwhs.chattel.entities.Role"/>
+	<typeAlias alias="menu" type="com.zwhs.chattel.entities.Menu"/>
+	<typeAlias alias="organization" type="com.zwhs.chattel.entities.Organization"/>
+	
+	<!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 根据角色id查询角色
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.RoleDao.selectRoleByUserId" parameterClass="java.lang.String" resultClass="role">
+		<![CDATA[
+			SELECT role_id roleId
+			     , role_name roleName
+			     , update_time updateTime
+			     , org_id orgId
+			     , otype_id otypeId
+			  FROM role
+			 WHERE role_id = #roleId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.25
+		desc: 通过组织机构ID查询角色
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getRoleInfoByOrgId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT r.role_id
+				 , r.role_name
+				 , r.update_time
+				 , type.otype_id
+				 , type.otype_name
+			  FROM role r
+			     , org_type type
+		]]>		
+			 WHERE r.otype_id = type.otype_id
+			   and r.org_id = #orgId#	   
+			   <dynamic>
+					<isNotEmpty property="input">    
+		       AND CONCAT(r.role_name, type.otype_name) like '%$input$%'
+		           	</isNotEmpty>
+			   </dynamic>
+	 	  ORDER BY r.update_time desc
+	 	         , type.otype_id
+	 	  LIMIT  #pageNo# ,#pageSize#
+	 	  
+
+	 </select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.25
+		desc: 通过组织机构ID查询角色
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getRoleInfoByOrgIdLike" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT r.role_id
+				 , r.role_name
+				 , r.update_time
+				 , type.otype_id
+				 , type.otype_name
+			  FROM role r
+			     , org_type type
+			 WHERE r.otype_id = type.otype_id
+			   and r.org_id = #orgId#
+			   AND CONCAT(r.role_name, type.otype_name) like #input#
+	 	  ORDER BY r.update_time desc
+	 	         , type.otype_id
+	 	  LIMIT  #pageNo# ,#pageSize#
+	 	  
+		]]>
+	 </select>
+	 
+	 <!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 创建角色
+	 -->
+	 <insert id="com.zwhs.chattel.dao.impl.RoleDao.insertRole" parameterClass="role">
+		<![CDATA[
+			insert into role( role_id
+				            , role_name
+				            , org_id
+				            , update_time
+				            , otype_id)
+			      values( #roleId#
+			            , #roleName#
+			            , #orgId#
+			            , #updateTime#
+			            , #otypeId#)
+		]]>
+	</insert>
+	 
+	 <!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 向角色菜单关联表插入数据
+	 -->
+	 <insert id="com.zwhs.chattel.dao.impl.RoleDao.insertRoleMenu" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into role_menu_rel
+			      values( #roleId#
+			            , #menuId#)
+		]]>
+	</insert>
+	
+	<!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 根据角色id删除向角色菜单关联表数据
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.RoleDao.updateRole" parameterClass="role">
+		<![CDATA[
+			UPDATE role r 
+			   SET r.role_name = #roleName#
+			     , r.update_time = #updateTime#
+			     , r.otype_id = #otypeId#
+			 WHERE r.role_id = #roleId#
+		]]>
+	</update>
+	 
+	 <!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 根据角色id删除向角色菜单关联表数据
+	 -->
+	<delete id="com.zwhs.chattel.dao.impl.RoleDao.deleteRoleMenu" parameterClass="java.lang.String">
+		<![CDATA[
+			DELETE FROM role_menu_rel
+				  WHERE role_id = #roleId#
+		]]>
+	</delete>
+	
+	<!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 根据角色id删除向角色
+	 -->
+	<delete id="com.zwhs.chattel.dao.impl.RoleDao.deleteRole" parameterClass="java.lang.String">
+		<![CDATA[
+			DELETE FROM role WHERE role_id = #roleId#
+		]]>
+	</delete>
+			
+	<!--
+		author: bianrx
+		date: 2014.4.30
+		desc: 通过角色名称, 组织机构id , 组织机构类型查询角色id
+	 -->						
+	<select id="com.zwhs.chattel.dao.impl.RoleDao.selectRoleIdByRole" parameterClass="role" resultClass="java.lang.String">
+		select r.role_id
+		  from role r
+		 where r.role_name = #roleName# 
+		   and r.otype_id = #otypeId# 
+		   and r.org_id = #orgId#
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.5.8
+		desc: 查询角色总数
+	 -->						
+	<select id="com.zwhs.chattel.dao.impl.RoleDao.getRoleInfoCountByOrgId" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		<![CDATA[
+		  SELECT count(r.role_id)
+			  FROM role r
+			     , org_type type
+	 	]]>			     
+			 WHERE r.otype_id = type.otype_id
+			   and r.org_id = #orgId#
+			   <dynamic>
+					<isNotEmpty property="input">    
+		       AND CONCAT(r.role_name, type.otype_name) like '%$input$%'
+		           	</isNotEmpty>
+			   </dynamic>
+	 	  ORDER BY r.update_time desc
+	 	         , type.otype_id
+
+	</select>
+</sqlMap>

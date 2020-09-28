@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="warehouse" type="com.zwhs.chattel.entities.Warehouse"/>
+	
+	<!--
+		author: bianrx
+		date: 2014.4.14
+		desc: 新增监管仓库
+	 -->
+	 
+	 <!-- 向warehouse表中插入新的监管仓库信息，参数Warehouse -->
+	<insert id="com.zwhs.chattel.dao.impl.WarehouseDao.insertWarehouse" parameterClass="com.zwhs.chattel.entities.Warehouse">
+		insert into warehouse( warehouse_id
+							  ,wtype_id
+							  ,warehouse_name
+							  ,warehouse_address
+							  ,is_delete
+							  ,is_lock
+							  ,update_time
+							  ,supv_id
+							 )
+		               values( #warehouseId#
+		                     , #wtypeId#
+		                     , #warehouseName#
+		                     , #warehouseAddress#
+		                     , #isDelete#
+		                     , #isLock#
+		                     , #updateTime#
+		                     , #supvId#)
+	</insert>
+	
+	<!-- 根据当前用户所属组织机构ID，查询所有监管仓库 --> 
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT wh.warehouse_id warehouseId
+		     	 , wh.warehouse_name warehouseName
+		     	 , wh.warehouse_address warehouseAddress
+		     	 , wh.is_delete isDelete
+		     	 , wh.is_lock isLock
+		     	 , wh.update_time updateTime
+		     	 , type.wtype_id wtypeId
+     			 , type.wtype_name wtypeName
+		  	  FROM warehouse wh
+		  	     , warehouse_type type
+		  	     , supervision_enterprise supv
+		  	 WHERE supv.supv_id = wh.supv_id
+		  	 	AND wh.wtype_id = type.wtype_id 
+		  	    AND wh.is_delete = 0
+		  	    AND supv.org_id = #orgId#
+		  	 ORDER BY wh.update_time desc
+		  	 LIMIT #limit# offset #offset#
+		]]>
+	</select>
+	
+	<!-- 根据当前用户所属组织机构ID，查询所有监管仓库的数据总条数 --> 
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseListCount" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(wh.warehouse_id)
+		  	  FROM warehouse wh
+		  	     , warehouse_type type
+		  	     , supervision_enterprise supv
+		  	 WHERE supv.supv_id = wh.supv_id
+		  	 	AND wh.wtype_id = type.wtype_id 
+		  	    AND wh.is_delete = 0
+		  	    AND supv.org_id = #orgId#
+		]]>
+	</select>
+	
+	<!-- 根据监管仓库Id，查询监管仓库所有信息 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseById" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT wh.warehouse_id warehouseId
+		     	 , wh.warehouse_name warehouseName
+		     	 , wh.warehouse_address warehouseAddress
+		     	 , wh.is_delete isDelete
+		     	 , wh.is_lock isLock
+		     	 , wh.update_time updateTime
+		     	 , type.wtype_id wtypeId
+     			 , type.wtype_name wtypeName
+     			 , supv.supv_name supvName
+     			 , wh.supv_id supvId
+		  	  FROM warehouse wh
+		  	     , warehouse_type type
+		  	     , supervision_enterprise supv
+		  	 WHERE wh.wtype_id = type.wtype_id 
+		  	   AND supv.supv_id = wh.supv_id
+		  	   AND wh.is_delete = 0
+		  	   AND wh.warehouse_id = #warehouseId#
+		]]>
+	</select>
+	
+	<!-- 根据监管仓库Id，查询当前监管仓库所有信息 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseByIdNow" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Warehouse">
+		<![CDATA[
+			SELECT wh.warehouse_id warehouseId
+		     	 , wh.warehouse_name warehouseName
+		     	 , wh.warehouse_address warehouseAddress
+		     	 , wh.is_delete isDelete
+		     	 , wh.is_lock isLock
+		     	 , wh.update_time updateTime
+     			 , wh.supv_id supvId
+		  	  FROM warehouse wh
+		  	 WHERE wh.warehouse_id = #warehouseId#
+		]]>
+	</select>
+	
+	<!-- 根据监管仓库Id，更新监管仓库的信息，参数为Warehouse -->
+	<update id="com.zwhs.chattel.dao.impl.WarehouseDao.updateWarehouse" parameterClass="com.zwhs.chattel.entities.Warehouse">
+		<![CDATA[
+			UPDATE warehouse wh
+			   SET wh.warehouse_name = #warehouseName#
+			     , wh.warehouse_address = #warehouseAddress#
+			     , wh.update_time = #updateTime#
+			     , wh.wtype_id = #wtypeId#
+			     , wh.supv_id = #supvId#
+			 WHERE wh.warehouse_id = #warehouseId#
+			 AND wh.is_lock = 0;
+		]]>
+	</update>
+	
+	<!-- 根据监管企业Id，查询监管企业所属监管仓库的信息 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseListBySupvId" parameterClass="java.lang.String" resultClass="warehouse">
+		<![CDATA[
+			SELECT wh.warehouse_id warehouseId
+				 , wh.wtype_id wtypeId
+		     	 , wh.warehouse_name warehouseName
+		     	 , wh.warehouse_address warehouseAddress
+		     	 , wh.is_delete isDelete
+		     	 , wh.is_lock isLock
+		     	 , wh.update_time updateTime
+		     	 , wh.supv_id supvId
+		  	  FROM warehouse wh
+		  	 WHERE wh.supv_id = #supvId#
+		  	   AND wh.is_delete = 0
+		]]>
+	</select>
+	
+		<!-- 根据监管企业Id，查询监管企业所属监管仓库的信息的总条数 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseListBySupvIdCount" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(wh.warehouse_id)
+		  	  FROM warehouse wh
+		  	 WHERE wh.supv_id = #supvId#
+		  	   AND wh.is_delete = 0
+		]]>
+	</select>
+	
+	<!-- 锁定监管仓库 -->
+	<update id="com.zwhs.chattel.dao.impl.WarehouseDao.lockWarehouse" parameterClass="warehouse">
+		<![CDATA[
+			UPDATE warehouse wh
+				SET wh.is_lock = 1
+			WHERE wh.warehouse_id = #warehouseId#
+		]]>
+	</update>
+	
+	<!-- 解锁监管仓库 -->
+	<update id="com.zwhs.chattel.dao.impl.WarehouseDao.unlockWarehouse" parameterClass="warehouse">
+		<![CDATA[
+			UPDATE warehouse wh
+				SET wh.is_lock = 0
+		    WHERE wh.warehouse_id = #warehouseId#
+		]]>
+	</update>
+	
+	<!-- 删除监管仓库 -->
+	<update id="com.zwhs.chattel.dao.impl.WarehouseDao.deleteWarehouse" parameterClass="warehouse">
+		<![CDATA[
+			UPDATE warehouse wh
+				SET wh.is_delete = 1
+				  , wh.update_time = #updateTime#
+		    WHERE wh.warehouse_id = #warehouseId#
+		    AND wh.is_lock = 0;
+		]]>
+	</update>
+	<!-- 监管仓库页面模糊查询 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseListByInput" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT wh.warehouse_id warehouseId
+		     	 , wh.warehouse_name warehouseName
+		     	 , wh.warehouse_address warehouseAddress
+		     	 , wh.is_delete isDelete
+		     	 , wh.is_lock isLock
+		     	 , wh.update_time updateTime
+		     	 , type.wtype_id wtypeId
+     			 , type.wtype_name wtypeName
+		  	  FROM warehouse wh
+		  	     , warehouse_type type
+		  	     , supervision_enterprise supv
+		  	 WHERE supv.supv_id = wh.supv_id
+		  	 	AND wh.wtype_id = type.wtype_id 
+		  	    AND wh.is_delete = 0
+		  	    AND supv.org_id = #orgId#
+		  	    AND CONCAT(wh.warehouse_name, wh.warehouse_address, type.wtype_name) like #input#
+		  	 ORDER BY wh.update_time desc
+		  	 LIMIT #limit# offset #offset#
+		]]>
+	</select>
+	<!-- 监管管仓库模糊查询到的数据总条数 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseDao.selectWarehouseListByInputCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT( wh.warehouse_id)
+		  	  FROM warehouse wh
+		  	     , warehouse_type type
+		  	     , supervision_enterprise supv
+		  	 WHERE supv.supv_id = wh.supv_id
+		  	 	AND wh.wtype_id = type.wtype_id 
+		  	    AND wh.is_delete = 0
+		  	    AND supv.org_id = #orgId#
+		  	    AND CONCAT(wh.warehouse_name, wh.warehouse_address, type.wtype_name) like #input#
+		]]>
+	</select>
+	
+	<!-- author: jimmyan 
+		 date: 2014.5.27
+		 desc: 查询是否可以删除监管仓库
+	 -->
+	<select id="org.springframework.stereotype.Repository.SupervisionEnterpriseDao.isDeleteWarehouseByWarehouseId"
+		    parameterClass="java.lang.String" 
+		    resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT
+				count(p.warehouse_id)
+			FROM
+				pledge p
+			WHERE
+			p.warehouse_id = #warehouseId#
+		]]>
+	</select>	
+</sqlMap>

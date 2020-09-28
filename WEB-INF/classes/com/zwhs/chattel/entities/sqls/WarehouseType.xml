@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="warehouseType" type="com.zwhs.chattel.entities.WarehouseType"/>
+	
+	<!-- 查询监管仓库类型 -->
+	<select id="com.zwhs.chattel.dao.impl.WarehouseTypeDao.selectWarehouseTypeList" resultClass="com.zwhs.chattel.entities.WarehouseType">
+		<![CDATA[
+			SELECT type.wtype_id wtypeId
+			     , type.wtype_name wtypeName
+			     , type.update_time updateTime
+			  FROM Warehouse_type type
+		]]>
+	</select>
+</sqlMap>

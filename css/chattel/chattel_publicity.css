@@ -1,0 +1,28 @@
+@charset "utf-8";
+.table_tr_td_div{
+	height:18px;
+	position:relative;
+	overflow:hidden;
+	white-space:nowrap;
+	margin-top:-10px;}
+.table_tr_td_div_div{
+	height:18px;
+	display:inline;
+	}
+.table_tr_td_div_type_name{
+	width:85px;
+}
+.table_tr_td_div_update_time{
+	width:120px;
+}
+.resultbg{
+	margin-top: -120px;
+	height: 150px;
+	background:	url(../../images/chattel/piliang.png) no-repeat 0 0;
+}
+.resultsuccess{
+	background:	url(../../images/chattel/piliangsuccess.png) no-repeat 0 0;
+}
+.resultfail{
+	background:	url(../../images/chattel/piliangfail.png) no-repeat 0 0;
+}

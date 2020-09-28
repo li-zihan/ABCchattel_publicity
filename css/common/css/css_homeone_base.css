@@ -1,0 +1,93 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*网页整体样式 Begin*/
+#container{
+	margin:10px auto;
+	width:1000px;
+	
+	}
+	
+#header,#mainBody,#footer{
+	/*margin-bottom:10px;*/
+	
+	}
+#header{
+	width:1000px;
+
+	border:#9DC6E6 0px solid;
+	border-bottom:none;
+	}
+#mainBody{
+	width:1000px;
+	height:auto;
+	border:#9DC6E6 0px solid;
+	
+	}
+#footer{
+	width:1000px;
+	border:#9DC6E6 0px solid;
+	border-top:none;
+	}
+
+.bodyLeft{
+	min-height:500px;
+	width:200px;
+	border-right:#9DC6E6 1px solid;
+	float:left;
+	}
+	
+p,h1,h2,h3,hr{
+	margin:0px;
+	padding:0px;
+	}	
+	
+a{
+	text-decoration:none;
+	cursor:pointer;
+	}	
+a:hover{
+	text-decoration:underline;
+	color:#F60;
+	}
+	
+a.overflowStyle{
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis; 
+	}
+
+	
+/*头部 End*/
+
+/*右侧 Begin*/
+	/*欢迎页面*/
+.welcomePage{
+	height:auto;
+	}	
+.welcomePage h1{
+	text-align:center;
+	font-size:36px;
+	font-weight:600;
+	color:#000;
+	margin-top:50px;
+	}
+	
+/*底部 Begin*/
+#footer h1{
+	width:1000px;
+	height:50px;
+	line-height:50px;
+	text-align:center;
+	color:#000;
+	font-size:12px;
+	font-weight:100;
+	background-image: url("../../images/test/footer.jpg");
+	}
+
+
+/*底部 End*/
+
+
+

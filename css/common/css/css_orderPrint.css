@@ -1,0 +1,72 @@
+@charset "utf-8";
+/* CSS Document */
+
+.container{
+	margin:10px auto;
+	width:250px;
+	color:#000;
+	background:#fff;
+	}
+
+.pageTitle h1{
+	margin:0px;
+	padding:0px;
+	height:30px;
+	line-height:30px;
+	font-size: 18px;
+	}
+
+.funcMood{
+	margin:0px;
+	}	
+.funcMood h1{
+	margin:0px;
+	padding:0px;
+	text-align:center;
+	width:100%;
+	height:auto;
+	line-height:15px;
+	font-size:13px;
+	color:#000;
+	background:#fff;
+	}
+
+.funcMood p{
+	margin:0px;
+	padding:0px;
+	font-size: 12px;
+	height:auto;
+	line-height: 15px;
+	}
+	
+.funcMood p.cut_1{
+	font-size: 12px;
+	height:5px;
+	line-height: 5px;
+	overflow: hidden;
+	}
+.funcMood p.cut_2{
+	font-family: monospace;
+	font-size: 14px;
+	height:5px;
+	line-height: 5px;
+	overflow: hidden;
+	}	
+.funcMood p.center{
+	text-align: center;
+	}
+.funcMood p.bold{
+	font-weight: 600;
+	}
+.funcMood p.wright{
+	height:auto;
+	line-height: 35px;
+	}	
+	
+input.printButton{
+	width:100px;
+	margin:10px 0px 10px 15px;
+	}	
+	
+	
+	

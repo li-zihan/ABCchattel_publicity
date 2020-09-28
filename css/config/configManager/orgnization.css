@@ -1,0 +1,24 @@
+@charset "utf-8";
+.main_content_orgnization{
+	font-size:12px;
+	padding-top:15px;
+	font-weight:bolder;
+}
+.navbar { margin-left:30px;}
+#organization_table_id td{
+	   background-color:#F9F8F8;
+	   height:30px;
+	   margin:5px 0px;
+	   }
+.organization_table_id_td{
+	height:35px;
+	width:500px;
+	}
+	#organization_table_id{
+	border:1px solid #CcCcCc;	
+	width:700px;
+	line-height:50px;
+	margin:10px auto;
+	}
+	
+.pr10 { font-size:14px; font-family:'Microsoft YaHei'; padding-right:10px;}

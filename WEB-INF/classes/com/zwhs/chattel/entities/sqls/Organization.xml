@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="organization" type="com.zwhs.chattel.entities.Organization" />
+
+	<!-- author: BoCheng date: 2014.4.14 desc: 组织结构 -->
+	<!--
+		author: shanzx
+		date: 2014.4.14
+		desc: 向organization表插入数据,参数为Organization
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.OrganizationDao.insertOrganization"
+		parameterClass="com.zwhs.chattel.entities.Organization">
+	 	<![CDATA[
+			INSERT INTO organization(  org_id
+									  ,otype_id
+									  ,org_name
+									  ,org_address
+									  ,is_delete
+									  ,is_lock
+									  ,update_time
+									  ,parent_id
+									  ,type_id
+									) 
+								values(#orgId#
+									  ,#otypeId#
+									  ,#orgName#
+									  ,#orgAddress#
+									  ,#isDelete#
+									  ,#isLock#
+									  ,#updateTime#
+									  ,#parentId#
+									  ,#bankType#)
+		]]>
+	</insert>
+
+	<!--
+		author: shanzx
+		date: 2014.4.14
+		desc: 查询出所有属于当前用户的组织机构
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOrganization"
+		parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+				   ,otype.otype_name otypeName
+				   ,org.org_name orgName
+				   ,org.org_address orgAddress
+				   ,org.is_delete isDelete
+				   ,org.is_lock isLock
+				   ,org.update_time updateTime
+				   ,org.parent_id parentId
+			FROM organization org left join org_type otype
+				on org.otype_id=otype.otype_id		
+	]]>
+	<dynamic prepend="where">
+			 
+	<isNotEmpty prepend="and" property="parentOrgId">    	
+	<![CDATA[
+              org.parent_id = #parentOrgId#  	
+     ]]>
+    </isNotEmpty>
+    </dynamic>
+    <![CDATA[
+	  		AND org.is_delete='0'
+			ORDER BY org.update_time desc
+		  	LIMIT #limit# offset #offset#	
+    ]]>  		
+	</select>
+	
+	<!--
+		author: shanzx
+		date: 2014.4.14
+		desc: 查询出所有属于当前用户的组织机构的数据条数
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOrganizationCount" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(org.org_id)
+				FROM organization org
+				WHERE org.parent_id = #parentOrgId#
+				AND org.is_delete='0'	
+		]]>
+	</select>
+
+	<!--
+		author: shanzx
+		date: 2014.4.14
+		desc: 模糊查询查询出所有属于当前用户的组织机构
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOrganizationByInput"
+		parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+				   ,otype.otype_name otypeName
+				   ,org.org_name orgName
+				   ,org.org_address orgAddress
+				   ,org.is_delete isDelete
+				   ,org.is_lock isLock
+				   ,org.update_time updateTime
+				   ,org.parent_id parentId
+			FROM organization org left join org_type otype
+				 on org.otype_id=otype.otype_id		
+			WHERE
+                 org.parent_id = #parentOrgId#  	
+	  		     AND org.is_delete='0'
+	  		     AND CONCAT(otype.otype_name,org.org_address,org.org_name) like #input#
+			     ORDER BY org.update_time desc
+		  	     LIMIT #limit# offset #offset#	
+    ]]>  		
+	</select>
+	
+		<!--
+		author: shanzx
+		date: 2014.4.14
+		desc: 对组织机构模糊查询的数据条数
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOrganizationByInputCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(org.org_id)
+				FROM organization org left join org_type otype
+				 on org.otype_id=otype.otype_id	
+				WHERE org.parent_id = #parentOrgId#
+				AND CONCAT(otype.otype_name,org.org_address,org.org_name) like #input#
+				AND org.is_delete='0'	
+		]]>
+	</select>
+	
+	<!--
+		根据组织结构结构Id，查询下属组织结构
+		author: bianrx
+		date: 2014.6.4
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectUnlockOrganization"
+		    parameterClass="java.lang.String" 
+		    resultClass="organization">
+		<![CDATA[
+			SELECT org.org_id orgId
+				 , org.org_name orgName
+				 , org.org_address orgAddress
+				 , org.is_delete isDelete
+				 , org.is_lock isLock
+				 , org.update_time updateTime
+				 , org.parent_id parentId
+				 , org.type_id BankType
+			  FROM organization org
+			 WHERE org.parent_id = #parentOrgId#
+			   AND org.is_delete = '0'
+		]]>
+	</select>
+
+	<!--
+		author: BoCheng
+		date: 2014.4.14
+		desc: 根据组织机构Id查询出组织机构所有信息
+	 -->
+	<select
+		id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOraganizationById"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Organization">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+				   ,org.org_name orgName
+				   ,org.otype_id otypeId
+				   ,org.org_address orgAddress
+				   ,org.is_delete isDelete
+				   ,org.is_lock isLock
+				   ,org.update_time updateTime
+				   ,org.parent_id parentId
+				   ,org.type_id bankType
+			FROM organization org
+			where org.org_id=#orgId# and org.is_delete='0'
+		]]>
+
+	</select>
+	
+	<!--
+		author: BoCheng
+		date: 2014.4.14
+		desc: 根据组织机构Name查询出组织机构所有信息
+	 -->
+	<select
+		id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOraganizationByName"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Organization">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+				   ,org.org_name orgName
+				   ,org.otype_id otypeId
+				   ,org.org_address orgAddress
+				   ,org.is_delete isDelete
+				   ,org.is_lock isLock
+				   ,org.update_time updateTime
+				   ,org.parent_id parentId
+			FROM organization org
+			where org.org_name=#orgName# and org.is_delete='0'
+		]]>
+
+	</select>
+
+	<!--
+		author: BoCheng
+		date: 2014.4.14
+		desc: 更新组织机构信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.OrganizationDao.updateOrganization"
+		parameterClass="com.zwhs.chattel.entities.Organization">
+		<![CDATA[
+			UPDATE organization organization SET
+				organization.org_name = #orgName#,
+				organization.org_address = #orgAddress#,
+				organization.update_time = #updateTime#,
+				organization.type_id = #bankType#
+			WHERE organization.org_id = #orgId#
+			AND organization.is_lock = 0
+		]]>
+	</update>
+
+	<!--
+		author: BoCheng
+		date: 2014.4.14
+		desc: 删除组织机构信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.OrganizationDao.deleteOrganization"
+		parameterClass="com.zwhs.chattel.entities.Organization">
+		<![CDATA[
+			UPDATE organization organization SET
+				organization.is_delete = '1',
+				organization.update_time = #updateTime#
+			WHERE organization.org_id = #orgId#
+			AND organization.is_lock = 0
+		]]>
+	</update>
+
+	<!--
+		author: BoCheng
+		date: 2014.4.14
+		desc: 锁定组织机构信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.OrganizationDao.lockOrganization"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			UPDATE organization organization SET
+				organization.is_lock = '1'
+			WHERE organization.org_id = #orgId#
+		]]>
+	</update>
+
+	<!--
+		author: BoCheng
+		date: 2014.4.14
+		desc: 解锁组织机构信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.OrganizationDao.unlockOrganization"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			UPDATE organization organization SET
+				organization.is_lock = '0'
+			WHERE organization.org_id = #orgId#
+		]]>
+	</update>
+	
+	<!--
+		author: yuezongxuan
+		date: 2014.5.20
+		desc: 银行类型个数实体集合
+	 -->
+	<select
+		id="com.zwhs.chattel.dao.impl.SecurityDao.getBankCountList" resultClass="com.zwhs.chattel.entities.BankCount">
+		<![CDATA[
+			SELECT COUNT(org.type_id) count, 
+					bt.type_id id, 
+					bt.type_name name
+			FROM organization org
+			LEFT JOIN bank_type bt ON org.type_id = bt.type_id
+			GROUP BY org.type_id
+		]]>
+	</select>
+	 
+	<!--
+		author: bianrx
+		date: 2014.5.23
+		desc: 根据组织机构名称集合查询组织机构id
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOrganizationByOrgName" parameterClass="java.util.HashMap" resultClass="com.zwhs.chattel.entities.Organization">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+			     , org.org_name orgName
+			  FROM organization org
+			 WHERE org.org_name = #orgName#
+			   AND org.is_lock = 0
+			   AND (org.parent_id = #orgId#
+			    OR org.org_id = #orgId#)
+		]]>
+	</select>
+		<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectLikelyNames" parameterClass="java.lang.String" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT fe.finan_name fname
+				FROM financing_enterprise fe
+				WHERE fe.finan_name like '%$finanName$%'
+		]]>
+		<!--AND is_delete=0
+				And is_lock-0-->
+	</select>
+	
+	<!--
+		author: bianrx
+		date: 2014.6.5
+		desc: 查询所有组织机构
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrganizationDao.selectOrganizationList" resultClass="organization">
+		<![CDATA[
+			SELECT org.org_id orgId
+			     , org_name orgName
+			  FROM organization org 
+			 WHERE org.is_delete = 0
+		  ORDER BY org.org_name DESC
+		]]>
+	</select>
+</sqlMap>

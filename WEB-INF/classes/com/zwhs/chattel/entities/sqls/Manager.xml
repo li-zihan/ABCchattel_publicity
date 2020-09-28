@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="manager" type="com.zwhs.chattel.entities.Manager"/>
+	
+	<!-- <select id="com.zwhs.chattel.dao.impl.ManagerDao.getManagerInfoByUserId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Manager">
+		<![CDATA[
+			SELECT ma.manager_id managerId
+			     , ma.org_id orgId
+			     , ma.user_id userId
+			     , ma.manager_name managerName
+			     , ma.manager_telphone managerTelphone
+			     , ma.manager_mobilephone managerMobilephone
+			     , ma.manager_email managerEmail
+			     , ma.update_time updateTime
+  				 , city.city_id cityId
+  				 , city.city_name cityName
+  				 , pro.pro_id proId
+  				 , pro.pro_name proName
+				 , org.org_name orgName
+				 , ot.otype_name otypeName
+   			 FROM  manager ma
+				 , organization org
+				 , org_type ot
+   			     , user usr
+  		         , city city
+  		         , province pro
+   			 WHERE ma.user_id = usr.user_id
+			 AND   ot.otype_id = org.otype_id
+			 AND   ma.org_id = org.org_id
+   			 AND   ma.city_id = city.city_id 
+  		     AND   city.pro_id = pro.pro_id
+   			 AND   ma.user_id = #userId#
+		]]>
+	</select> -->
+	
+	 <select id="com.zwhs.chattel.dao.impl.ManagerDao.getManagerInfoByUserId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Manager">
+		<![CDATA[
+   			 SELECT ma.manager_id managerId
+			     , ma.org_id orgId
+			     , ma.user_id userId
+			     , ma.manager_name managerName
+			     , ma.manager_telphone managerTelphone
+			     , ma.manager_mobilephone managerMobilephone
+			     , ma.manager_email managerEmail
+			     , ma.update_time updateTime
+				 , (
+					select pro.pro_id
+                	  from city c , province pro 
+               		 where c.city_id = ma.city_id
+                       and c.pro_id = pro.pro_id
+					)proId
+				 , (
+					select c.city_id
+                      from city c
+                     where c.city_id = ma.city_id
+					)cityId
+				 , (
+					select pro.pro_name
+                      from city c , province pro 
+                     where c.city_id = ma.city_id
+                       and c.pro_id = pro.pro_id
+					)proName
+				 , (
+					select c.city_name
+                      from city c
+                     where c.city_id = ma.city_id
+					)cityName
+				 , org.org_name orgName
+				 , ot.otype_name otypeName
+   			 FROM  manager ma
+				 , organization org
+				 , org_type ot
+   			     , user usr
+   			 WHERE ma.user_id = usr.user_id
+			   AND   ot.otype_id = org.otype_id
+			   AND   ma.org_id = org.org_id
+   			 AND   ma.user_id = #userId#
+		]]>
+	</select>
+	
+	<select id="com.zwhs.chattel.dao.impl.ManagerDao.getManagerByUserId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Manager">
+		<![CDATA[
+			SELECT ma.manager_id managerId
+			     , ma.org_id orgId
+			     , ma.city_id cityId
+			     , ma.user_id userId
+			     , ma.manager_name managerName
+			     , ma.manager_telphone managerTelphone
+			     , ma.manager_mobilephone managerMobilephone
+			     , ma.manager_email managerEmail
+			     , ma.update_time updateTime
+			     , ma.idcard
+   			  FROM manager ma
+   			     , user usr
+   			 WHERE ma.user_id = usr.user_id
+   			   AND ma.user_id = #userId#
+		]]>
+	</select>
+	<!-- 根据orgId查询manager -->
+	<select id="com.zwhs.chattel.dao.impl.ManagerDao.getManagerByOrgId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT ma.manager_id managerId
+			     , ma.org_id orgId
+			     , ma.city_id cityId
+			     , ma.user_id userId
+			     , ma.manager_name managerName
+			     , ma.manager_telphone managerTelphone
+			     , ma.manager_mobilephone managerMobilephone
+			     , ma.manager_email managerEmail
+			     , ma.update_time updateTime
+   			  FROM manager ma
+   			     , user usr
+   			 WHERE ma.user_id = usr.user_id
+   			   AND ma.org_id = #orgId#
+   			   AND ma.is_lock <> '1'
+		]]>
+	</select>
+	<!-- 根据managerId查询manager -->
+	<select id="com.zwhs.chattel.dao.impl.ManagerDao.getManagerByManagerId" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.Manager">
+		<![CDATA[
+			SELECT ma.manager_id managerId
+			     , ma.org_id orgId
+			     , ma.city_id cityId
+			     , ma.user_id userId
+			     , ma.idcard idcard
+			     , ma.manager_name managerName
+			     , ma.manager_telphone managerTelphone
+			     , ma.manager_mobilephone managerMobilephone
+			     , ma.manager_email managerEmail
+			     , ma.update_time updateTime
+   			  FROM manager ma
+   			 WHERE ma.manager_id = #managerId#
+		]]>
+	</select>
+</sqlMap>

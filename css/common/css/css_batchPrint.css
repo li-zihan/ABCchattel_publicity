@@ -1,0 +1,62 @@
+@charset "utf-8";
+/* CSS Document */
+
+.container{
+	margin:10px auto;
+	width:570px;
+	color:#000;
+	background:#fff;
+	}
+
+.pageTitle h1{
+	margin:0px;
+	padding:0px;
+	height:30px;
+	line-height:30px;
+	font-size: 18px;
+	}
+
+.funcMood{
+	margin:10px 0px;
+	}	
+.funcMood h1{
+	margin:0px;
+	padding:0px;
+	text-align:center;
+	width:100%;
+	height:auto;
+	line-height:15px;
+	font-size:13px;
+	color:#000;
+	background:#fff;
+	}
+
+.funcMood p{
+	margin:0px;
+	padding:0px;
+	font-size: 12px;
+	height:auto;
+	line-height: 20px;
+	}
+
+.funcMood p.wright{
+	height:70px;
+	}
+.funcMood p.pageNum{
+	margin:10px 0px 150px 0px;
+	text-align: center;
+	}
+
+.tableStyle_print th,
+.tableStyle_print td{
+	padding:3px 0px;
+	line-height:15px;
+	}
+
+input.printButton{
+	width:100px;
+	margin:10px 0px 10px 130px;
+	}	
+	
+	
+	

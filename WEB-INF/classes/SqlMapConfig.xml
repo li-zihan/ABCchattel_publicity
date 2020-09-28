@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig     
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"     
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings cacheModelsEnabled="true" enhancementEnabled="true"
+       lazyLoadingEnabled="true" useStatementNamespaces="false"
+       statementCachingEnabled="true" classInfoCacheEnabled="true"
+       errorTracingEnabled="true" />
+        
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/User.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/FinancingEnterprise.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/City.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Collateral.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Warehouse.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/WarehouseType.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Organization.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Manager.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/OrgType.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/SupervisionEnterprise.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/CollateraVariety.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Pledge.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Role.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/Menu.xml"/>
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/BankType.xml" />
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/PurchaseContractNo.xml" />
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/PurchaseInvoiceNo.xml" />
+    <sqlMap resource="com/zwhs/chattel/entities/sqls/UserPassword.xml" />
+</sqlMapConfig>

@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	
+	}
+
+.container,
+.success,
+.error{
+	margin:20px;
+	padding:0px;
+	width:715px;
+	height:auto;
+	}
+
+.pageTitle h1{
+	text-align:center;
+	height:30px;
+	line-height:30px;
+	}
+	
+.funcMood{
+	width:100%;
+	margin-bottom:20px;
+	}	
+.funcMood h1{
+	margin:0px 0px 15px 0px;
+	padding:0px 0px 0px 30px;
+	width:685px;
+	height:30px;
+	line-height:30px;
+	font-size:14px;
+	background:#7DBEFF;
+	color:#FFFFFF;
+	}
+	
+/*错误*/
+.error .pageTitle h1{
+	color:red;
+	}
+
+/*成功*/
+.success .pageTitle h1{
+	color:#06F;
+	}
+	
+.center{
+	text-align: center;
+	}	
+	

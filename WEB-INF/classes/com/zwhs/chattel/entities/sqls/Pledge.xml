@@ -1,0 +1,1114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="Pledge" type="com.zwhs.chattel.entities.Pledge"/>
+	<typeAlias alias="PledgeSelectLog" type="com.zwhs.chattel.entities.PledgeSelectLog"/>
+	
+	<!--
+		author: bianrx
+		date: 2014.6.5
+		desc: 动产登记信息录入
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.PledgeDao.insertPledgeInfo" parameterClass="Pledge">
+		<![CDATA[
+		INSERT INTO  pledge(   pledge_id																
+						     , guarantee_pledgor																
+						     , guarantee_count																
+						     , guarantee_price																
+						     , guarantee_contract_no																
+						     , guarantee_Invoice_no
+						     , guarantee_pledge_rate																
+						     , guarantee_warehouse_no																
+						     , guarantee_warehouse_position	
+						     , guarantee_warehouse_address															
+						     , financing_begin_date																
+						     , financing_end_date
+						     , financing_amount
+						     , financing_mincontrol_value
+						     , financing_bond_rate
+						     , financing_contract_amount
+						     , financing_delivery_date
+						     , warehouse_id
+						     , cvar_id
+						     , wtype_id
+						     , finan_id
+						     , supv_id
+						     , remarks
+						     , register_id
+						     , undertaker_id
+						     , update_time
+						     , specifical
+						     , is_delete
+						     , is_lock
+						     , insert_time
+						     )															
+				      VALUES ( #pledgeId#																
+						     , #guaranteePledgor#																
+						     , #guaranteeCount#																
+						     , #guaranteePrice#																
+						     , #guaranteeContractNo#															
+						     , #guaranteeInvoiceNo#
+						     , #guaranteePledgeRate#																
+						     , #guaranteeWarehouseNo#																
+						     , #warehousePosition#	
+						     , #guaranteeWarehouseAddress#															
+						     , #financingBeginDate#																
+						     , #financingEndDate#																
+						     , #financingAmount#																
+						     , #financingMincontrolValue#																
+						     , #financingBondRate#																
+						     , #financingContractAmount#
+						     , #financingDeliveryDate#															
+						     , #warehouseId#
+						     , #cvarId#
+						     , #wtypeId#
+						     , #finanId#
+						     , #supvId#
+						     , #remarks#
+						     , #registerId#
+						     , #undertakerId#
+						     , #updateTimes#
+						     , #specifical#
+						     , #isDelete#
+						     , #isLock#
+						     , #insertTime#
+						     )											
+		]]>
+	</insert>
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 查询公示信息
+		table: pledge,financing_enterprise,collatera_variety
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" >
+		<![CDATA[
+			SELECT pl.pledge_id																
+			     , pl.guarantee_pledgor																
+			     , pl.guarantee_count																
+			     , pl.guarantee_price																
+			     , pl.guarantee_contract_no																
+			     , pl.guarantee_Invoice_no
+			     ,(select GROUP_CONCAT(purchase_contract_no) from purchase_contract_no where pledge_id=pl.pledge_id)	as guarantee_contract_nos
+				 ,(select GROUP_CONCAT(purchase_invoice_no) from purchase_invoice_no where pledge_id=pl.pledge_id)	as guarantee_Invoice_nos
+			     , pl.guarantee_pledge_rate																
+			     , pl.guarantee_warehouse_no																
+			     , pl.guarantee_warehouse_position																
+			     , pl.financing_begin_date																
+			     , pl.financing_end_date
+			     , pl.financing_amount
+			     , pl.financing_mincontrol_value
+			     , pl.financing_bond_rate
+			     , pl.financing_contract_amount
+			     , pl.financing_delivery_date
+			     , pl.warehouse_id
+			     , pl.cvar_id
+			     , pl.wtype_id
+			     , pl.finan_id
+			     , pl.supv_id
+			     , pl.update_time
+			     , pl.insert_time
+			     , pl.undertaker_id
+			     , pl.is_delete
+			     , pl.is_lock	
+			     , fe.finan_org_code	
+			     , fe.finan_name	
+			     , cvar.cvar_name
+			     , org.org_id
+			     , org.org_name
+			     , bt.type_id
+			     , bt.type_name								
+		      FROM pledge pl
+		      LEFT JOIN financing_enterprise fe
+	  				 ON pl.finan_id = fe.finan_id	
+		      LEFT JOIN collatera_variety cvar
+	  				 ON pl.cvar_id = cvar.cvar_id	
+	  		  LEFT JOIN manager mg
+	  		  		 ON mg.manager_id = pl.undertaker_id
+	  		  LEFT JOIN organization org
+	  		  		 ON org.org_id = mg.org_id	
+	  		  LEFT JOIN bank_type bt
+	  		  		 ON org.type_id = bt.type_id
+	  		 WHERE pl.is_delete = 0
+	  		  ORDER BY pl.insert_time desc		
+		      LIMIT  #pageNo# ,#pageSize#
+		]]>
+	</select>
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 查询公示信息总条数
+		table: pledge,financing_enterprise,collatera_variety
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoNum" resultClass="java.lang.Integer" >
+		<![CDATA[
+		SELECT 			 	count(*)						
+				      FROM pledge pl
+		      LEFT JOIN financing_enterprise fe
+	  				 ON pl.finan_id = fe.finan_id	
+		      LEFT JOIN collatera_variety cvar
+	  				 ON pl.cvar_id = cvar.cvar_id	
+	  		  LEFT JOIN manager mg
+	  		  		 ON mg.manager_id = pl.undertaker_id
+	  		  LEFT JOIN organization org
+	  		  		 ON org.org_id = mg.org_id	
+	  		  LEFT JOIN bank_type bt
+	  		  		 ON org.type_id = bt.type_id
+	  		 WHERE pl.is_delete = 0
+	  		  ORDER BY pl.insert_time desc	
+									
+		]]>
+	</select>
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 根据条件查询公示信息
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoLike" parameterClass="PledgeSelectLog" resultClass="java.util.HashMap" >
+		<![CDATA[
+			SELECT pl.pledge_id																
+			     , pl.guarantee_pledgor																
+			     , pl.guarantee_count																
+			     , pl.guarantee_price																
+			     , pl.guarantee_contract_no																
+			     , pl.guarantee_Invoice_no
+			     ,IFNULL((select GROUP_CONCAT(purchase_contract_no) from purchase_contract_no where pledge_id=pl.pledge_id)	,'') as guarantee_contract_nos
+	 			 ,IFNULL((select GROUP_CONCAT(purchase_invoice_no) from purchase_invoice_no where pledge_id=pl.pledge_id)	,'') as guarantee_Invoice_nos
+			     , pl.guarantee_pledge_rate																
+			     , pl.guarantee_warehouse_no																
+			     , pl.guarantee_warehouse_position																
+			     , pl.financing_begin_date																
+			     , pl.financing_end_date
+			     , pl.financing_amount
+			     , pl.financing_mincontrol_value
+			     , pl.financing_bond_rate
+			     , pl.financing_contract_amount
+			     , pl.financing_delivery_date
+			     , pl.warehouse_id
+			     , pl.cvar_id
+			     , pl.wtype_id
+			     , pl.finan_id
+			     , pl.supv_id
+			     , pl.undertaker_id
+			     , pl.is_delete
+			     , pl.is_lock	
+			     , pl.update_time
+			     , pl.insert_time
+			     , fe.finan_org_code	
+			     , fe.finan_name	
+			     , cvar.cvar_name	
+			     , supv.supv_name
+			     , wh.warehouse_name			
+			     , wh.warehouse_address		
+			     , mg.manager_name
+			     , org.org_id
+			     , org.org_name
+			     , bt.type_name
+		      FROM pledge pl
+		      LEFT JOIN financing_enterprise fe
+	  				ON pl.finan_id = fe.finan_id	
+		      LEFT JOIN collatera_variety cvar
+	  				ON pl.cvar_id = cvar.cvar_id	
+	  		  LEFT JOIN supervision_enterprise supv
+	  		  		ON pl.supv_id = supv.supv_id
+	  		  LEFT JOIN warehouse wh
+	  		  		ON pl.warehouse_id = wh.warehouse_id
+	  		  LEFT JOIN manager mg
+	  		  		ON mg.manager_id = pl.undertaker_id
+	  		  LEFT JOIN organization org
+	  		  		ON org.org_id = mg.org_id
+	  		  LEFT JOIN bank_type bt
+	  		  		ON org.type_id = bt.type_id	
+				  ]]>	
+			 WHERE pl.IS_DELETE = 0	  		
+			 <dynamic>
+			 
+			 	<isNotEmpty prepend="and" property="orgId">    
+			  	<![CDATA[
+                	mg.org_id = #orgId#  
+                ]]>
+            	</isNotEmpty>
+            	
+			 	<isNotEmpty prepend="and" property="pledgeeId">    
+			  	<![CDATA[
+                	org.org_id = #pledgeeId#  
+                ]]>
+            	</isNotEmpty>
+			 
+			  	<isNotEmpty prepend="and" property="finanName">    
+			  	<![CDATA[
+                	fe.finan_name like '%$finanName$%'  
+                ]]>
+            	</isNotEmpty> 
+            	 
+            	<isNotEmpty prepend="and" property="finanOrgCode">  
+            	<![CDATA[
+                	fe.finan_org_code like '%$finanOrgCode$%'  
+                	]]>
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="cvarId">  
+            	<![CDATA[
+                	pl.cvar_id like '%$cvarId$%'  
+                	]]>
+           		</isNotEmpty>  
+           		
+            	<isNotEmpty prepend="and" property="guaranteeContractNo">  
+            	<![CDATA[
+                	pl.pledge_id in(select pcn.pledge_id from purchase_contract_no pcn where pcn.purchase_contract_no like '%$guaranteeContractNo$%' )
+                	]]>
+            	</isNotEmpty> 
+            	 
+            	<isNotEmpty prepend="and" property="guaranteeInvoiceNo">  
+            	<![CDATA[
+               		pl.pledge_id in(select pin.pledge_id from purchase_invoice_no pin where pin.purchase_invoice_no like '%$guaranteeInvoiceNo$%' )
+               		]]>
+            	</isNotEmpty> 
+            	 
+            	<isNotEmpty prepend="and" property="guaranteePledgor">  
+            	<![CDATA[
+                	pl.guarantee_pledgor like '%$guaranteePledgor$%'
+                	]]>
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="warehouseName">  
+            	<![CDATA[
+                	wh.warehouse_name like '%$warehouseName$%'  
+                	]]>
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="supvName"> 
+            	<![CDATA[ 
+                	supv.supv_name like '%$supvName$%' 
+                	]]> 
+            	</isNotEmpty> 
+            	
+            	<isNotEmpty prepend="and" property="supvId"> 
+            	<![CDATA[ 
+                	supv.supv_id like '%$supvId$%' 
+                	]]> 
+            	</isNotEmpty>
+            	
+            	<isNotEmpty prepend="and" property="warehouseId"> 
+            	<![CDATA[ 
+                	wh.warehouse_id like '%$warehouseId$%' 
+                	]]> 
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="undertakerId">  
+            	<![CDATA[
+                	pl.undertaker_id like '%$undertakerId$%'  
+                	]]>
+            	</isNotEmpty>  
+
+			 </dynamic>
+			  	<![CDATA[
+			  	
+			  				 LIMIT  #pageNumber#
+				      		,#pageSize#		  		
+			  		]]>  		
+				      									
+	</select>
+	
+	<!-- 
+		author: yk
+		date: 2014.4.30
+		desc: 根据条件查询公示信息（仅包括本行添加的）
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoLikeByorg" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" >
+		<![CDATA[
+		SELECT 				  pl.pledge_id
+							, pl.guarantee_pledgor			
+						    , pl.guarantee_count		
+						    , pl.guarantee_contract_no
+						    ,(select GROUP_CONCAT(purchase_contract_no) from purchase_contract_no where pledge_id=pl.pledge_id)	as guarantee_contract_nos
+						    ,(select GROUP_CONCAT(purchase_invoice_no) from purchase_invoice_no where pledge_id=pl.pledge_id)	as guarantee_Invoice_nos
+						    , pl.guarantee_Invoice_no		
+						    , pl.guarantee_warehouse_no		
+						    , pl.guarantee_warehouse_position	
+						    , pl.guarantee_warehouse_address	
+						    , pl.finan_id							
+						    , pl.financing_begin_date		
+						    , pl.financing_end_date
+						    , pl.financing_delivery_date
+						    , pl.update_time
+						    , pl.insert_time
+						    , pl.is_delete
+						    , pl.is_lock
+						    , pl.remove_time	
+						    , fe.finan_org_code	
+						    , fe.finan_name	
+						    , cvar.cvar_name	
+						    , supv.supv_name
+						    , wh.warehouse_name			
+						    , wh.warehouse_address		
+						    , mg.manager_name
+				      FROM pledge pl
+				      LEFT JOIN financing_enterprise fe
+			  				ON pl.finan_id = fe.finan_id	
+				      LEFT JOIN collatera_variety cvar
+			  				ON pl.cvar_id = cvar.cvar_id	
+			  		  LEFT JOIN supervision_enterprise supv
+			  		  		ON pl.supv_id = supv.supv_id
+			  		  LEFT JOIN warehouse wh
+			  		  		ON pl.warehouse_id = wh.warehouse_id
+			  		  LEFT JOIN manager mg
+			  		  		ON mg.manager_id = pl.undertaker_id
+			  		  LEFT JOIN organization org
+			  		  		ON org.org_id = mg.org_id
+			  ]]>		  		
+			 <dynamic prepend="where">
+			 
+			  	<isNotEmpty prepend="and" property="finanName">   
+
+ 
+			  	<![CDATA[
+                	fe.finan_name like '%$finanName$%'  
+                ]]>
+            	</isNotEmpty> 
+            	
+            	<isNotEmpty prepend="and" property="cvarId">  
+            	<![CDATA[
+                	pl.cvar_id like '%$cvarId$%'  
+                	]]>
+           		</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="supvId"> 
+            	<![CDATA[ 
+                	supv.supv_id like '%$supvId$%' 
+                	]]> 
+            	</isNotEmpty>
+            	
+            	<isNotEmpty prepend="and" property="warehouseId"> 
+            	<![CDATA[ 
+                	wh.warehouse_id like '%$warehouseId$%' 
+                	]]> 
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="registerId">  
+            	<![CDATA[
+                	pl.register_id = #registerId#  
+                	]]>
+            	</isNotEmpty>  
+			 </dynamic>
+			  	<![CDATA[
+			  				 ORDER BY pl.is_delete ASC
+			  				 		, pl.remove_time DESC
+			  				        , pl.update_time DESC
+			  				 LIMIT #limit# offset #offset#
+			  		]]>  		
+				      							
+
+		
+	</select>
+	
+	<!-- 
+		author: yk
+		date: 2014.4.30
+		desc: 根据条件查询公示信息（仅包括本行添加的）（获得总数）
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgecountByorg" parameterClass="java.util.HashMap" resultClass="java.lang.Integer" >
+		<![CDATA[
+		SELECT 				  count(pl.pledge_id)
+				      FROM pledge pl
+				      LEFT JOIN financing_enterprise fe
+			  				ON pl.finan_id = fe.finan_id	
+				      LEFT JOIN collatera_variety cvar
+			  				ON pl.cvar_id = cvar.cvar_id	
+			  		  LEFT JOIN supervision_enterprise supv
+			  		  		ON pl.supv_id = supv.supv_id
+			  		  LEFT JOIN warehouse wh
+			  		  		ON pl.warehouse_id = wh.warehouse_id
+			  		  LEFT JOIN manager mg
+			  		  		ON mg.manager_id = pl.undertaker_id
+			  		  LEFT JOIN organization org
+			  		  		ON org.org_id = mg.org_id
+			  ]]>		  		
+			 <dynamic prepend="where">
+			 
+			  	<isNotEmpty prepend="and" property="finanName">   
+
+ 
+			  	<![CDATA[
+                	fe.finan_name like '%$finanName$%'  
+                ]]>
+            	</isNotEmpty> 
+            	
+            	<isNotEmpty prepend="and" property="cvarId">  
+            	<![CDATA[
+                	pl.cvar_id like '%$cvarId$%'  
+                	]]>
+           		</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="supvId"> 
+            	<![CDATA[ 
+                	supv.supv_id like '%$supvId$%' 
+                	]]> 
+            	</isNotEmpty>
+            	
+            	<isNotEmpty prepend="and" property="warehouseId"> 
+            	<![CDATA[ 
+                	wh.warehouse_id like '%$warehouseId$%' 
+                	]]> 
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="registerId">  
+            	<![CDATA[
+                	pl.register_id = #registerId#  
+                	]]>
+            	</isNotEmpty>  
+			 </dynamic>
+		
+	</select>
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 根据条件查询公示信息总条数
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoLikeNum" parameterClass="PledgeSelectLog" resultClass="java.lang.Integer" >
+		<![CDATA[
+		SELECT 				count(pledge_id)	 
+				      FROM pledge pl
+				      LEFT JOIN financing_enterprise fe
+			  				ON pl.finan_id = fe.finan_id	
+				      LEFT JOIN collatera_variety cvar
+			  				ON pl.cvar_id = cvar.cvar_id	
+			  		  LEFT JOIN supervision_enterprise supv
+			  		  		ON pl.supv_id = supv.supv_id
+			  		  LEFT JOIN warehouse wh
+			  		  		ON pl.warehouse_id = wh.warehouse_id
+			  		  LEFT JOIN manager mg
+			  		  		ON mg.manager_id = pl.undertaker_id
+			  		  LEFT JOIN organization org
+			  		  		ON org.org_id = mg.org_id
+			  		  LEFT JOIN bank_type bt
+			  		  		ON org.type_id = bt.type_id	
+			  ]]>		  		
+			 WHERE pl.IS_DELETE = 0	  		
+			 <dynamic>
+			 
+			 	<isNotEmpty prepend="and" property="orgId">    
+			  	<![CDATA[
+                	mg.org_id = #orgId#  
+                ]]>
+            	</isNotEmpty>
+            	
+			 	<isNotEmpty prepend="and" property="pledgeeId">    
+			  	<![CDATA[
+                	org.org_id = #pledgeeId#  
+                ]]>
+            	</isNotEmpty>
+			 
+			  	<isNotEmpty prepend="and" property="finanName">    
+			  	<![CDATA[
+                	fe.finan_name like '%$finanName$%'  
+                ]]>
+            	</isNotEmpty> 
+            	 
+            	<isNotEmpty prepend="and" property="finanOrgCode">  
+            	<![CDATA[
+                	fe.finan_org_code like '%$finanOrgCode$%'  
+                	]]>
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="cvarId">  
+            	<![CDATA[
+                	pl.cvar_id like '%$cvarId$%'  
+                	]]>
+           		</isNotEmpty>  
+           		
+            	<isNotEmpty prepend="and" property="guaranteeContractNo">  
+            	<![CDATA[
+                	pl.pledge_id in(select pcn.pledge_id from purchase_contract_no pcn where pcn.purchase_contract_no like '%$guaranteeContractNo$%' )
+                	]]>
+            	</isNotEmpty> 
+            	 
+            	<isNotEmpty prepend="and" property="guaranteeInvoiceNo">  
+            	<![CDATA[
+               		pl.pledge_id in(select pin.pledge_id from purchase_invoice_no pin where pin.purchase_invoice_no like '%$guaranteeInvoiceNo$%' )
+               		]]>
+            	</isNotEmpty> 
+            	 
+            	<isNotEmpty prepend="and" property="guaranteePledgor">  
+            	<![CDATA[
+                	pl.guarantee_pledgor like '%$guaranteePledgor$%'  
+                	]]>
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="warehouseName">  
+            	<![CDATA[
+                	wh.warehouse_name like '%$warehouseName$%'  
+                	]]>
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="supvName"> 
+            	<![CDATA[ 
+                	supv.supv_name like '%$supvName$%' 
+                	]]> 
+            	</isNotEmpty> 
+            	
+            	<isNotEmpty prepend="and" property="supvId"> 
+            	<![CDATA[ 
+                	supv.supv_id like '%$supvId$%' 
+                	]]> 
+            	</isNotEmpty>
+            	
+            	<isNotEmpty prepend="and" property="warehouseId"> 
+            	<![CDATA[ 
+                	wh.warehouse_id like '%$warehouseId$%' 
+                	]]> 
+            	</isNotEmpty>  
+            	
+            	<isNotEmpty prepend="and" property="undertakerId">  
+            	<![CDATA[
+                	pl.undertaker_id like '%$undertakerId$%'  
+                	]]>
+            	</isNotEmpty>  
+
+			 </dynamic>	
+				      									
+	</select>
+	
+	
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 查询预警
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoLog" parameterClass="PledgeSelectLog" resultClass="java.util.HashMap" >
+		<![CDATA[
+		SELECT 		 		  lg.log_id
+							, lg.org_id
+							, lg.update_time
+							, lg.finan_name
+							, lg.finan_org_code
+							, lg.cvar_id
+							, lg.guarantee_contract_no
+							, lg.guarantee_Invoice_no
+							, lg.guarantee_pledgor
+							, lg.warehouse_name
+							, lg.supv_name
+							, lg.pledgee_id	
+							, org.org_name
+				      FROM pledge_select_log lg
+				      LEFT JOIN organization org
+			  		  ON org.org_id = lg.org_id
+				 WHERE	  		
+                	lg.finan_name = #finanName#  
+				AND
+                	lg.finan_org_code = #finanOrgCode#  
+				AND
+                	lg.cvar_id = #cvarId#  
+				AND
+                	lg.guarantee_contract_no = #guaranteeContractNo#  
+    			AND
+               		lg.guarantee_Invoice_no = #guaranteeInvoiceNo#  
+				AND
+                	lg.guarantee_pledgor = #guaranteePledgor#  
+  				AND
+                	lg.warehouse_name = #warehouseName#
+   				AND
+                	lg.supv_name = #supvName# 
+				AND
+                	lg.pledgee_id = #pledgeeId#  
+
+			  ]]>				
+	</select>
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 查询预警
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.PledgeDao.insertPledgeInfoLog" parameterClass="PledgeSelectLog">
+		<![CDATA[
+		INSERT INTO  pledge_select_log(	  log_id
+							, org_id
+							, userid
+							, update_time
+							, finan_name
+							, finan_org_code
+							, cvar_id
+							, guarantee_contract_no
+							, guarantee_Invoice_no
+							, guarantee_pledgor
+							, warehouse_name
+							, supv_name
+							, pledgee_id
+							)											
+				    VALUES (  #logId#
+				      		, #orgId#
+				      		, #userid#														
+				      		, #updateTime1#														
+				      		, #finanName#														
+				      		, #finanOrgCode#														
+				      		, #cvarId#														
+				      		, #guaranteeContractNo#														
+				      		, #guaranteeInvoiceNo#														
+				      		, #guaranteePledgor#														
+				      		, #warehouseName#														
+				      		, #supvName#														
+				      		, #pledgeeId#														
+						     )											
+		]]>
+	</insert>
+	
+	<!-- 
+		author: shanzx
+		date: 2014.4.28
+		desc: 动产公示解除提醒提示    查询到期的公示信息
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoByendTime" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+	 		SELECT  pl.pledge_id
+			      , pl.guarantee_pledgor pledgor																																												
+				  , pl.financing_end_date finanEndTime
+				  , pl.update_time updateTime
+				  , fe.finan_name finanName
+				  , fe.finan_org_code orgCode
+			 FROM pledge pl
+				   LEFT JOIN financing_enterprise fe
+			  			ON pl.finan_id = fe.finan_id	
+			  	   LEFT JOIN supervision_enterprise supv
+			  	        ON pl.supv_id=supv.supv_id
+			 WHERE supv.org_id = #orgId#
+			 	   AND pl.is_delete = 0
+			 	   AND pl.is_lock = 0
+			 	   AND DATE_FORMAT(pl.financing_end_date,'%Y-%m-%d') < #endTime#
+		     LIMIT  #pageNo#
+				    ,#pageSize#	
+	 	]]>
+	 </select>
+	 
+	 <!-- 
+		author: shanzx
+		date: 2014.4.29
+		desc: 查询正常的公示信息条数
+		table: pledge,supervision_enterprise
+		
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoByNormalNum" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 	<![CDATA[
+	 		SELECT count(pl.pledge_id)
+		      FROM pledge pl
+		      LEFT JOIN financing_enterprise fe
+	  				ON pl.finan_id = fe.finan_id	
+		      LEFT JOIN collatera_variety cvar
+	  				ON pl.cvar_id = cvar.cvar_id	
+	  		  LEFT JOIN supervision_enterprise supv
+	  		  		ON pl.supv_id = supv.supv_id
+	  		  LEFT JOIN warehouse wh
+	  		  		ON pl.warehouse_id = wh.warehouse_id
+	  		  LEFT JOIN manager mg
+	  		  		ON mg.manager_id = pl.undertaker_id
+	  		  LEFT JOIN organization org
+	  		  		ON org.org_id = mg.org_id
+	  		  WHERE pl.register_id = #registerId#
+	 	]]>
+	 </select>
+	 
+	 <!-- 
+		author: shanzx
+		date: 2014.4.29
+		desc: 查询解除的公示信息条数
+		table: pledge,supervision_enterprise
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoByunLockNum" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+	 	<![CDATA[
+	 		SELECT count(pl.pledge_id)
+		      FROM pledge pl
+		      LEFT JOIN financing_enterprise fe
+	  				ON pl.finan_id = fe.finan_id	
+		      LEFT JOIN collatera_variety cvar
+	  				ON pl.cvar_id = cvar.cvar_id	
+	  		  LEFT JOIN supervision_enterprise supv
+	  		  		ON pl.supv_id = supv.supv_id
+	  		  LEFT JOIN warehouse wh
+	  		  		ON pl.warehouse_id = wh.warehouse_id
+	  		  LEFT JOIN manager mg
+	  		  		ON mg.manager_id = pl.undertaker_id
+	  		  LEFT JOIN organization org
+	  		  		ON org.org_id = mg.org_id
+	  		  WHERE pl.register_id = #registerId#
+ 			  AND (pl.is_delete = 1 OR pl.is_lock= 1)
+	 	]]>
+	 </select>
+	 
+	 <!-- 
+		author: shanzx
+		date: 2014.4.29
+		desc: 查询待解除的公示信息条数
+		table: pledge,supervision_enterprise
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoByendTimeNum" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 	<![CDATA[
+	 		SELECT COUNT(pl.pledge_id)
+			 FROM pledge pl,supervision_enterprise supv
+			 WHERE pl.supv_id=supv.supv_id 
+	 			  AND supv.org_id = #orgId#
+	 			  AND pl.is_delete = 0
+			 	  AND pl.is_lock = 0
+			 	  AND DATE_FORMAT(pl.financing_end_date,'%Y-%m-%d') < #endTime#
+	 	]]>
+	 </select>
+	
+	<!-- 
+		author: yuezongxuan
+		date: 2014.4.22
+		desc: 修改查询预警
+		table: pledge,financing_enterprise,collatera_variety
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.PledgeDao.updatePledgeInfoLog" parameterClass="PledgeSelectLog">
+		<![CDATA[
+		UPDATE pledge_select_log
+		SET update_time = #updateTime1#				
+		WHERE log_id = #logId#							
+		]]>
+	</update>
+	
+	<!-- 		
+		author: yk
+		date: 2014.4.30
+		desc: 解除动产登记信息
+		table: pledge
+	 -->
+
+	<update id="com.zwhs.chattel.dao.impl.PledgeDao.deletePledge" parameterClass="java.util.HashMap">
+		<![CDATA[
+			UPDATE pledge pl SET
+						pl.is_delete = 1
+					  , pl.remove_time = #removeTime#
+				WHERE pl.pledge_id = #pledgeId#
+		]]>
+	</update>
+		<!-- 
+		author: yk
+		date: 2014.4.30
+		desc: 根据pledge_id查询公示信息（仅包括本行添加的）
+		table: pledge,financing_enterprise,collatera_variety
+		借款企业，组织机构代码，担保品，采购合同号，采购发票号，出质人，监管企业,质权人
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.PledgeDao.selectPledgeInfoLikeByPledgeId" parameterClass="java.lang.String" resultClass="java.util.HashMap" >
+		<![CDATA[
+		SELECT 				   pl.pledge_id										
+						     , pl.guarantee_pledgor								
+						     , pl.guarantee_count								
+						     , pl.guarantee_price								
+						     , pl.guarantee_contract_no								
+						     , pl.guarantee_Invoice_no
+						     , pl.guarantee_pledge_rate								
+						     , pl.guarantee_warehouse_no							
+						     , pl.guarantee_warehouse_position							
+						     , pl.guarantee_warehouse_address							
+						     , pl.financing_begin_date								
+						     , pl.financing_end_date
+						     , pl.financing_amount
+						     , pl.financing_mincontrol_value
+						     , pl.financing_bond_rate
+						     , pl.financing_contract_amount
+						     , pl.financing_delivery_date
+						     , pl.warehouse_id
+						     , pl.cvar_id
+						     , pl.wtype_id
+						     , pl.finan_id
+						     , pl.remarks
+						     , pl.supv_id
+						     , pl.undertaker_id
+						     , pl.update_time
+						     , pl.is_delete
+						     , pl.is_lock	
+							 , fe.finan_name								
+							 , fe.finan_legal_rep								
+							 , fe.finan_regist_num								
+							 , fe.finan_org_code
+							 , fe.finan_tax_reg_num								
+							 , (select c.pro_id from city c where c.city_id=fe.city_id) pro_id								
+							 , fe.city_id								
+							 , fe.finan_telphone								
+							 , fe.finan_zip_code								
+							 , fe.finan_address
+							 , fe.finan_id		
+						     , cvar.cvar_name	
+						     , supv.supv_name
+						     , wh.warehouse_name			
+						     , wh.warehouse_address		
+						     , mg.manager_name
+						     , org.org_id
+						     , org.org_name
+				      FROM pledge pl
+				      LEFT JOIN financing_enterprise fe
+			  				ON pl.finan_id = fe.finan_id	
+				      LEFT JOIN collatera_variety cvar
+			  				ON pl.cvar_id = cvar.cvar_id	
+			  		  LEFT JOIN supervision_enterprise supv
+			  		  		ON pl.supv_id = supv.supv_id
+			  		  LEFT JOIN warehouse wh
+			  		  		ON pl.warehouse_id = wh.warehouse_id
+			  		  LEFT JOIN manager mg
+			  		  		ON mg.manager_id = pl.undertaker_id
+			  		  LEFT JOIN organization org
+			  		  		ON org.org_id = mg.org_id
+			  		  WHERE pledge_id = #pledgeId#
+			  ]]>		  		
+			 
+	</select>
+	<!--
+		author: jimmyan
+		date: 2014.4.11
+		desc: 融资企业信息录入
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.PledgeDao.updatePledgeInfo" parameterClass="Pledge">
+		<![CDATA[
+			UPDATE pledge
+			   SET guarantee_pledgor = #guaranteePledgor#						
+			     , guarantee_count = #guaranteeCount#						
+			     , guarantee_price = #guaranteePrice#						
+			     , guarantee_contract_no = #guaranteeContractNo#					
+			     , guarantee_Invoice_no = #guaranteeInvoiceNo#
+			     , guarantee_pledge_rate = #guaranteePledgeRate#					
+			     , guarantee_warehouse_no = #guaranteeWarehouseNo#					
+			     , guarantee_warehouse_position = #warehousePosition#			
+			     , guarantee_warehouse_address = #guaranteeWarehouseAddress#			
+			     , financing_begin_date = #financingBeginDate#					
+			     , financing_end_date = #financingEndDate#
+			     , financing_amount = #financingAmount#
+			     , financing_mincontrol_value = #financingMincontrolValue#
+			     , financing_bond_rate = #financingBondRate#
+			     , financing_contract_amount = #financingContractAmount#
+			     , financing_delivery_date = #financingDeliveryDate#
+			     , warehouse_id = #warehouseId#
+			     , cvar_id = #cvarId#
+			     , wtype_id = #wtypeId#
+			     , finan_id = #finanId#
+			     , supv_id = #supvId#
+			     , remarks = #remarks#
+			     , register_id = #registerId#
+			     , undertaker_id = #undertakerId#
+			     , update_time = #updateTime#
+		     WHERE pledge_id = #pledgeId#					
+		]]>
+	</update>   
+	   	
+	 <!-- 
+		author: yuezongxuan
+		date: 2014.5.20
+		desc: 正在进行的个数
+		table: pledge
+		
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.SecurityDao.getOnGoingCount" resultClass="java.lang.Integer">
+	 	<![CDATA[
+	 		SELECT COUNT(pledge_id) 
+	 			FROM pledge pl
+	 			WHERE pl.is_delete = 0
+	 	]]>
+	 </select>
+	 
+	 <!-- 
+		author: yuezongxuan
+		date: 2014.5.20
+		desc: 已解除的个数
+		table: pledge
+		
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.SecurityDao.getRelieveCount" resultClass="java.lang.Integer">
+	 	<![CDATA[
+	 		SELECT COUNT(pledge_id) 
+	 			FROM pledge pl
+	 			WHERE pl.is_delete = 1
+	 	]]>
+	 </select>	
+	 <!-- 
+	 查询预警信息
+	  -->
+	  <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectQueryWarn" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  		<![CDATA[
+	  			SELECT
+						psl.log_id,
+						(SELECT type_name FROM bank_type where type_id=(select tion.otype_id from organization tion where tion.org_id=psl.org_id )) org_id,
+						psl.update_time,
+						psl.finan_name,
+						psl.finan_org_code,
+						(select cvar_name from collatera_variety where cvar_id=psl.cvar_id) cvar_id,
+						psl.guarantee_contract_no,
+						psl.guarantee_Invoice_no,
+						psl.guarantee_pledgor,
+						psl.warehouse_name,
+						psl.supv_name,
+						(select tion.org_name from organization tion where tion.org_id=psl.pledgee_id) pledgee_id
+					FROM
+						pledge_select_log psl
+					where psl.org_id<>#orgId# and psl.userid<>#userid#
+					]]>
+				<dynamic>
+			 
+			 	<isNotEmpty prepend="and" property="finan_name">    
+			  	<![CDATA[
+                	psl.finan_name = #finan_name#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="finan_org_code">    
+			  	<![CDATA[
+                	psl.finan_org_code = #finan_org_code#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="cvar_id">    
+			  	<![CDATA[
+                	psl.cvar_id = #cvar_id#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="guarantee_contract_no">    
+			  	<![CDATA[
+                	psl.guarantee_contract_no = #guarantee_contract_no#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="guarantee_Invoice_no">    
+			  	<![CDATA[
+                	psl.guarantee_Invoice_no = #guarantee_Invoice_no#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="guarantee_pledgor">    
+			  	<![CDATA[
+                	psl.guarantee_pledgor = #guarantee_pledgor#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="supv_name">    
+			  	<![CDATA[
+                	psl.supv_name = #supv_name#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="warehouse_name">    
+			  	<![CDATA[
+                	psl.warehouse_name = #warehouse_name#  
+                ]]>
+                </isNotEmpty>
+                <isNotEmpty prepend="and" property="pledgee_id">    
+			  	<![CDATA[
+                	psl.pledgee_id = #pledgee_id#  
+                ]]>
+                </isNotEmpty>
+                </dynamic>
+	  		
+	  </select>
+	 <!-- 
+	 查询当前用户动产查询日志信息
+	  -->
+	  <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectQueryWarnOfCurrentUser" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  		<![CDATA[
+	  			SELECT
+						psl.log_id,
+						psl.org_id,
+						psl.update_time,
+						psl.finan_name,
+						psl.finan_org_code,
+						psl.cvar_id,
+						psl.guarantee_contract_no,
+						psl.guarantee_Invoice_no,
+						psl.guarantee_pledgor,
+						psl.warehouse_name,
+						psl.supv_name,
+						psl.pledgee_id
+					FROM
+						pledge_select_log psl
+					where psl.userid=#userid# 
+	  		]]>
+	  </select>
+	  <!-- 
+	  
+	   -->
+	   <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectQueryWarnNum" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	   	<![CDATA[
+	   		select count(*)
+	   			from 
+	   			pledge_select_log
+				where org_id<>#orgId# 
+	   	]]>
+	   	
+	   </select>
+	  <!-- 
+	  
+	   -->
+	   <select id="com.zwhs.chattel.dao.impl.PledgeDao.selectCvarName" parameterClass="java.lang.String" resultClass="java.lang.String">
+	   	<![CDATA[
+   			SELECT
+				cv1.cvar_name
+			FROM
+				collatera_variety cv1
+			WHERE
+				cv1.cvar_id = (
+					SELECT
+						cv.varparent_id
+					FROM
+						collatera_variety cv
+					WHERE
+						cv.cvar_name = #cvar_name#
+				) 
+	   	]]>
+	   	
+	   </select>
+	   
+	   	<select id="com.zwhs.chattel.dao.impl.PledgeDao.viewPledageInfo" parameterClass="java.lang.String" resultClass="java.util.HashMap" >
+		<![CDATA[
+		SELECT 				  pl.pledge_id
+							, pl.guarantee_pledgor			
+						    , pl.guarantee_count		
+						    , pl.guarantee_contract_no
+						    ,(select GROUP_CONCAT(purchase_contract_no) from purchase_contract_no where pledge_id=pl.pledge_id)	as guarantee_contract_nos
+						    ,(select GROUP_CONCAT(purchase_invoice_no) from purchase_invoice_no where pledge_id=pl.pledge_id)	as guarantee_Invoice_nos
+						    , pl.guarantee_Invoice_no		
+						    , pl.guarantee_warehouse_no		
+						    , pl.guarantee_warehouse_position	
+						    , pl.guarantee_warehouse_address	
+						    , pl.finan_id							
+						    , pl.financing_begin_date		
+						    , pl.financing_end_date
+						    , pl.financing_delivery_date
+						    , pl.update_time
+						    , pl.insert_time
+						    , pl.is_delete
+						    , pl.is_lock
+						    , pl.remove_time	
+						    , fe.finan_org_code	
+						    , fe.finan_name	
+						    , cvar.cvar_name	
+						    , supv.supv_name
+						    , wh.warehouse_name			
+						    , wh.warehouse_address		
+						    , mg.manager_name
+				      FROM pledge pl
+				      LEFT JOIN financing_enterprise fe
+			  				ON pl.finan_id = fe.finan_id	
+				      LEFT JOIN collatera_variety cvar
+			  				ON pl.cvar_id = cvar.cvar_id	
+			  		  LEFT JOIN supervision_enterprise supv
+			  		  		ON pl.supv_id = supv.supv_id
+			  		  LEFT JOIN warehouse wh
+			  		  		ON pl.warehouse_id = wh.warehouse_id
+			  		  LEFT JOIN manager mg
+			  		  		ON mg.manager_id = pl.undertaker_id
+			  		  LEFT JOIN organization org
+			  		  		ON org.org_id = mg.org_id
+			  		  where pl.pledge_id=#pledgeid#
+			  ]]>		
+			</select>
+</sqlMap>

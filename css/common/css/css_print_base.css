@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+
+.noPrint{
+	display:none;
+	}
+
+div,
+h1,
+h2,
+h3,
+h4,
+p,
+table{
+	color:#000;
+	}

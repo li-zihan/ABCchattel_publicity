@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="FinancingEnterprise" type="com.zwhs.chattel.entities.FinancingEnterprise"/>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.11
+		desc: 融资企业信息录入
+	 -->
+	 <!-- 向financing_enterprise表中插入新的融资企业信息 -->
+	<insert id="com.zwhs.chattel.dao.impl.FinancingEnterpriseDao.insertFinancingEnterpriseInfo" parameterClass="FinancingEnterprise">
+		<![CDATA[
+		INSERT INTO financing_enterprise(   finan_id															
+									     , finan_name																
+									     , finan_legal_rep																
+									     , finan_regist_num																
+									     , finan_org_code
+									     , finan_tax_reg_num																
+									     , city_id																
+									     , finan_telphone																
+									     , finan_zip_code																
+									     , finan_address
+									     )															
+							      VALUES ( #finanId#																
+									     , #finanName#																
+									     , #finanLegalRep#																
+									     , #finanRegistNum#															
+									     , #finanOrgCode#
+									     , #finanTaxRegNum#																
+									     , #cityId#																
+									     , #finanTelphone#																
+									     , #finanZipCode#																
+									     , #finanAddress#)											
+		]]>
+	</insert>
+	<!--
+		author: jimmyan
+		date: 2014.4.11
+		desc: 融资企业信息修改
+	 -->
+	 <!-- 向financing_enterprise表中插入新的融资企业信息 -->
+	<update id="com.zwhs.chattel.dao.impl.FinancingEnterpriseDao.updateFinancingEnterpriseInfo" parameterClass="FinancingEnterprise">
+		<![CDATA[
+		UPDATE 			financing_enterprise  
+							SET			   finan_name = #finanName#																
+									     , finan_legal_rep = #finanLegalRep#																
+									     , finan_regist_num = #finanRegistNum#																
+									     , finan_org_code = #finanOrgCode#
+									     , finan_tax_reg_num = #finanTaxRegNum#																
+									     , city_id = #cityId#																
+									     , finan_telphone = #finanTelphone#																
+									     , finan_zip_code = #finanZipCode#																
+									     , finan_address = #finanAddress#
+								WHERE 			finan_id = #finanId#		
+		]]>
+	</update>
+	
+	<select id="com.zwhs.chattel.dao.impl.FinancingEnterpriseDao.selectFinancingEnterpriseByCode" parameterClass="java.lang.String" resultClass="FinancingEnterprise">
+		<![CDATA[
+			select fi.finan_id finanId
+			     , fi.finan_name finanName
+			     , fi.finan_legal_rep FinanLegalRep
+				 , fi.finan_regist_num finanRegistNum
+				 , fi.finan_org_code finanOrgCode
+				 , fi.finan_tax_reg_num finanTaxRegNum
+				 , fi.city_id cityId
+				 , fi.finan_telphone finanTelphone
+				 , fi.finan_zip_code finanZipCode
+				 , fi.finan_address finanAddress
+				 , fi.update_time updateTime
+				 , fi.is_delete isDelete
+				 , fi.is_lock isLock
+			  from financing_enterprise fi
+			 where fi.finan_org_code = #orgCode#
+		]]>
+	</select>
+	
+	<select id="com.zwhs.chattel.dao.impl.FinancingEnterpriseDao.selectFinancingByName" parameterClass="java.lang.String" resultClass="FinancingEnterprise">
+		<![CDATA[
+			select fi.finan_id finanId
+			     , fi.finan_name finanName
+			     , fi.finan_legal_rep FinanLegalRep
+				 , fi.finan_regist_num finanRegistNum
+				 , fi.finan_org_code finanOrgCode
+				 , fi.finan_tax_reg_num finanTaxRegNum
+				 , fi.city_id cityId
+				 , fi.finan_telphone finanTelphone
+				 , fi.finan_zip_code finanZipCode
+				 , fi.finan_address finanAddress
+				 , fi.update_time updateTime
+				 , fi.is_delete isDelete
+				 , fi.is_lock isLock
+			  from financing_enterprise fi
+			 where fi.finan_name like '%$finanName$%'
+			 limit 1
+		]]>
+	</select>
+	
+	
+</sqlMap>

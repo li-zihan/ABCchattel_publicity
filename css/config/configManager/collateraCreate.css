@@ -1,0 +1,21 @@
+@charset "utf-8";
+.main_content_collatera{
+	font-size:16px;
+	margin-bottom:26px;
+	padding-top:26px;
+	margin-left:380px;
+	font-weight:bolder;
+}
+label{
+    vertical-align:middle;}
+ input{
+    vertical-align:middle;}
+    
+.td_input1{
+	margin-left:40px;} 
+.td_input2{
+	margin-left:60px;
+} 
+    
+    
+    

@@ -1,0 +1,86 @@
+@CHARSET "UTF-8";
+body{
+	min-height:400px;
+	}
+	
+.container{
+	}
+	
+fieldset{
+	width:400px;
+	border:1px #999 solid;
+	margin:50px;
+	padding:0px;
+	}
+legend{
+	margin:0px 30px;
+	padding:0px 20px;
+	color:#06F;
+	font-size:14px;
+	font-weight: 600;
+	}	
+	
+form{
+	width:340px;
+	padding:20px 30px;
+	}	
+
+.inputDiv{
+	width:250px;
+	
+	}
+
+
+.inputDiv label,
+.inputDiv input,
+.inputDiv select,
+.inputDiv img,
+.inputDiv a{
+	display:block;
+	float:left;
+	margin:8px 5px;
+	height:15px;
+	line-height:15px;
+	font-size:13px;
+	}
+	
+.inputDiv label{
+	width:70px;
+	color:#333;
+	text-align:right;
+	padding:0px;
+	font-weight: 600;
+	}	
+.inputDiv input{
+	width:150px;
+	}
+.inputDiv select{
+	height:22px;
+	line-height:22px;
+	width:155px;
+	}
+
+.inputDiv img.imgcode{
+	width:60px;
+	height:20px;
+	margin:8px 10px 5px 0px;
+	cursor: pointer;
+	}
+.inputDiv input.imgcode{
+	width:80px;
+	}
+	
+.submitDiv{
+	text-align: center;
+	}	
+.submitDiv input.button,
+.submitDiv input.submitButton{
+	margin:15px 20px;
+	width:80px;
+	height:25px;
+	}	
+.errorMessage {
+	color: red;
+	font-size: 12px;
+}
+	

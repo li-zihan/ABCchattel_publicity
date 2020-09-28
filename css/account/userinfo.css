@@ -1,0 +1,38 @@
+@charset "utf-8";
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {font-family: Arial, Helvetica, sans-serif;font-size: 12px;margin: 0;padding: 0}
+table {border-collapse: collapse;border-spacing: 0; width:750px;height:370px}
+img {border: 0;}
+ol, ul {list-style: none}
+h1, h2, h3, h4, h5, h6 {font-size: 100%;font-weight: normal}
+a {text-decoration: none}
+.clearfix:before, .clearfix:after {display: table;content: "";}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;}
+.clr {clear: both}
+/*以上为防止兼容性问题及其他全体声明*/
+/**{ margin: 0 auto; padding:0;}
+ul { list-style-type:none; display:inline}
+li { list-style-type:none; display:inline}*/
+.center { width:1000px; margin:0 auto;  background-image:url(../../images/account/bg.png); height:404px;}
+.center_1_ale { width:905px; height:470px; background-color:#FFFFFF; border:2px solid #cccccc;  margin-bottom:20px; margin-left:47px; }
+.center_2_ale { width:400px; height:60px; line-height:60px; text-align:center; font-size:15px; font-family: "Microsoft YaHei"; font-weight:bold}
+.center_3_ale { margin-top: -10px;width:750px; height:370px; float:left; margin-left:77px; background-color:#f9f8f8;  border-top:1px solid #cccccc;  border-left: 1px solid #cccccc; border-right:1px solid #cccccc;border-bottom:1px solid #cccccc;}
+.center_3_ale ul li { width:454px; height:39px; float:left; border-bottom:1px solid #cccccc; line-height:39px; font-family:"Microsoft YaHei"; font-size:14px; padding-left:30px; color:#333333}
+.center_4_ale { width:800px; height:60px; line-height:60px; text-align:center; font-size:15px; font-family: "Microsoft YaHei"; font-weight:bold}
+
+table tr td{
+	width:30%;
+    border:1px solid #cccccc;
+	padding-left: 22px;
+	font-family: "微软雅黑";
+	font-size:14px;
+}
+
+.new{
+        margin-top:12px;
+        width:58px; height:28px;
+		cursor:pointer;
+		margin-left:23px; padding:0px; float:left;border:1px solid #C0C0C0; }
+
+.new input{
+        width:58px; height:28px; line-height:28px;font-size:14px;background-color:#F8F8F8;cursor:pointer;font-family: "微软雅黑";}

@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="user" type="com.zwhs.chattel.entities.User"/>
+	<typeAlias alias="manager" type="com.zwhs.chattel.entities.Manager"/>
+	<typeAlias alias="pledge" type="com.zwhs.chattel.entities.Pledge"/>
+	
+	<!--
+		author: bianrx
+		date: 2014.3.12
+		desc: 根据用户名，密码查询用户
+	 -->
+	
+	<select id="com.zwhs.chattel.dao.impl.UserDao.login" parameterClass="java.util.HashMap" resultClass="com.zwhs.chattel.entities.User">
+		<![CDATA[
+			SELECT usr.user_id userId
+			     , usr.username username
+			     , usr.password password
+			     , usr.role_id roleId
+			  FROM user usr
+		     WHERE usr.username = #username#	
+			   AND usr.password = #password#	
+			   AND LENGTH(TRIM(#username#)) = LENGTH(#username#)
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.7.4
+		desc: 查询用户是否被锁定
+	 -->
+	
+	<select id="com.zwhs.chattel.dao.impl.UserDao.loginLock" parameterClass="java.util.HashMap" resultClass="com.zwhs.chattel.entities.User">
+		<![CDATA[
+			SELECT usr.user_id userId
+			     , usr.username username
+			     , usr.password password
+			     , usr.role_id roleId
+			  FROM user usr, manager ma
+		     WHERE usr.user_id = ma.user_id
+		       AND usr.username = #username#	
+			   AND usr.password = #password#
+			   AND ma.is_lock = '0'	
+		]]>
+	</select>
+	
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出所有属于当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUserManagerInfoByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT ma.manager_id managerId
+				 , ma.manager_name managerName
+				 , ma.is_lock isLock
+				 , ma.is_delete isDelete
+            	 , org.org_id orgId
+				 , org.org_name orgName
+				 , r.role_id roleId
+           		 , r.role_name roleName
+           		 , ot.otype_id otypeId
+           		 , u.user_id userId
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.parent_id = #parentOrgId#
+			   and ma.is_delete='0'
+	 	  ORDER BY ma.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getCurrentUserManagerInfoByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT ma.manager_id managerId
+				 , ma.manager_name managerName
+				 , ma.is_lock isLock
+				 , ma.is_delete isDelete
+            	 , org.org_id orgId
+				 , org.org_name orgName
+				 , r.role_id roleId
+           		 , r.role_name roleName
+           		 , ot.otype_id otypeId
+           		 , u.user_id userId
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.org_id = #parentOrgId#
+			   and ma.is_delete='0'
+	 	  ORDER BY ma.update_time desc
+	 	  LIMIT  #pageNo#
+			    ,#pageSize#
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出所有属于当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUserManagerInfoListByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			(SELECT ma.manager_id managerId
+				 , ma.manager_name managerName
+				 , ma.is_lock isLock
+				 , ma.is_delete isDelete
+            	 , org.org_id orgId
+				 , org.org_name orgName
+				 , r.role_id roleId
+           		 , r.role_name roleName
+           		 , ot.otype_id otypeId
+           		 , u.user_id userId
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.parent_id = #parentOrgId#
+			   and ma.is_delete='0'
+	 	  ORDER BY ma.update_time desc
+	 	  )
+
+			UNION
+			(
+			SELECT ma.manager_id managerId
+				 , ma.manager_name managerName
+				 , ma.is_lock isLock
+				 , ma.is_delete isDelete
+            	 , org.org_id orgId
+				 , org.org_name orgName
+				 , r.role_id roleId
+           		 , r.role_name roleName
+           		 , ot.otype_id otypeId
+           		 , u.user_id userId
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.org_id = #parentOrgId#
+			   and ma.is_delete='0'
+	 	  ORDER BY ma.update_time desc
+	 	  )
+	 	  LIMIT  #pageNo# ,#pageSize#
+		]]>
+	 </select>
+	 
+	 <!--
+		author: yk
+		date: 2014.5.13
+		desc: 查询出所有属于当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUserManagerInfoListByUserIdlike" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT * FROM   ((SELECT ma.manager_id managerId
+							 , ma.manager_name managerName
+							 , ma.is_lock isLock
+							 , ma.is_delete isDelete
+			            	 , org.org_id orgId
+							 , org.org_name orgName
+							 , r.role_id roleId
+			           		 , r.role_name roleName
+			           		 , ot.otype_id otypeId
+			           		 , u.user_id userId
+			                 , u.update_time update_time
+						FROM   organization org
+			          		 , manager ma
+			          		 , user u
+			          		 , role r
+			          		 , org_type ot
+						WHERE  org.org_id = ma.org_id
+			        	   and ma.user_id = u.user_id
+			        	   and u.role_id = r.role_id
+			        	   and ot.otype_id = org.otype_id
+						   and org.parent_id = #parentOrgId#
+						   and ma.is_delete='0'
+						   and concat(ma.manager_name,r.role_name,org.org_name) like #input#
+				 	  ORDER BY ma.update_time desc
+				 	  )
+			
+						UNION
+						(
+						SELECT ma.manager_id managerId
+							 , ma.manager_name managerName
+							 , ma.is_lock isLock
+							 , ma.is_delete isDelete
+			            	 , org.org_id orgId
+							 , org.org_name orgName
+							 , r.role_id roleId
+			           		 , r.role_name roleName
+			           		 , ot.otype_id otypeId
+			           		 , u.user_id userId
+			           		 , u.update_time update_time
+						FROM   organization org
+			          		 , manager ma
+			          		 , user u
+			          		 , role r
+			          		 , org_type ot
+						WHERE  org.org_id = ma.org_id
+			        	   and ma.user_id = u.user_id
+			        	   and u.role_id = r.role_id
+			        	   and ot.otype_id = org.otype_id
+						   and org.org_id = #parentOrgId#
+						   and ma.is_delete='0'
+						   and concat(ma.manager_name,r.role_name,org.org_name) like #input#
+				 	  ORDER BY ma.update_time desc
+				 	  )) userinfo ORDER BY update_time DESC
+				 	  LIMIT  #pageNo# ,#pageSize#
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getCurrentUserManagerInfoListByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT ma.manager_id managerId
+				 , ma.manager_name managerName
+				 , ma.is_lock isLock
+				 , ma.is_delete isDelete
+            	 , org.org_id orgId
+				 , org.org_name orgName
+				 , r.role_id roleId
+           		 , r.role_name roleName
+           		 , ot.otype_id otypeId
+           		 , u.user_id userId
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.org_id = #parentOrgId#
+			   and ma.is_delete='0'
+	 	  ORDER BY ma.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出所有属于当前用户的组织机构
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getOrgInfoByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+				,  org.org_name orgName
+				,  org.otype_id otypeId
+			 FROM  organization org
+			WHERE  org.parent_id = #parentOrgId#
+			  AND  org.is_lock = '0'
+	 	 ORDER BY  org.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出当前用户的组织机构
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getCurrentOrgInfoByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT org.org_id orgId
+				,  org.org_name orgName
+				,  org.otype_id otypeId
+			 FROM  organization org
+			WHERE  org.org_id = #parentOrgId#
+			  AND  org.is_lock = '0'
+	 	 ORDER BY  org.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出当前用户的角色
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getRoleInfoByUserId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT r.role_id roleId
+				,  r.role_name roleName
+				,  r.otype_id otypeId
+			 FROM  role r
+			WHERE  r.org_id = #parentOrgId#
+			AND  r.otype_id = (SELECT  org.otype_id otypeId
+									 FROM  organization org
+									WHERE  org.org_id = #orgId#)
+	 	 ORDER BY  r.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出选中的组织机构类别的角色
+	 -->
+	 <select id="getRolesByOrgId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT r.role_id roleId
+				,  r.role_name roleName
+				,  r.otype_id otypeId
+			 FROM  role r
+			WHERE  r.org_id = #parentOrgId#
+				AND  r.otype_id = (SELECT  org.otype_id otypeId
+									 FROM  organization org
+									WHERE  org.org_id = #orgId#)
+	 	 ORDER BY  r.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 管理员创建用户
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.RoleDao.insertUserManagerRoleInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into role
+						(  role_id
+					     , role_name
+					     , org_id
+					     , update_time
+			     )
+			     values (  #roleId#
+					     , #roleName#
+					     , #orgId#
+					     , #updateTime#
+			     )
+		]]>
+	</insert>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 管理员创建用户
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.RoleDao.insertUserManagerUserInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into user
+						(  user_id
+					     , role_id
+					     , username
+					     , password
+					     , user_type
+					     , update_time
+					     , is_firstlogin
+			     )
+			     values (  #userId#
+					     , #roleId#
+					     , #userName#
+					     , #password#
+					     , #userType#
+					     , #updateTime#
+					     , '1'
+			     )
+		]]>
+	</insert>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 管理员创建用户
+	 -->
+	<insert id="com.zwhs.chattel.dao.impl.RoleDao.insertUserManagerInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			insert into manager
+						(
+						   manager_id
+					     , org_id
+					     , user_id
+					     , city_id
+					     , manager_name
+					     , manager_telphone
+					     , manager_mobilephone
+					     , manager_email
+					     , update_time
+					     , is_lock
+					     , is_delete
+					     , idcard
+						)
+			     values (  #managerId#
+					     , #orgId#
+					     , #userId#
+					     , #cityId#
+					     , #managerName#
+					     , #managerTelPhone#
+					     , #managerMobilePhone#
+					     , #managerEmail#
+					     , #updateTime#
+					     , #isLock#
+					     , #isDelete#
+					     , #idcard#
+			     )
+		]]>
+	</insert>
+	
+	<select id="com.zwhs.chattel.dao.impl.UserDao.selectUserById" parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.User">
+		<![CDATA[
+			SELECT usr.user_id userId
+			     , usr.username username
+			     , usr.password password
+			     , usr.role_id roleId
+			     , usr.update_time updateTime
+			     , usr.user_type userType
+			  FROM user usr
+		     WHERE usr.user_id = #userId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 更新用户时加载用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUserInfoByManagerId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<![CDATA[
+			SELECT ma.manager_id managerId
+				 , ma.manager_name managerName
+				, (
+					select pro.pro_id
+                	  from city c , province pro 
+               		 where c.city_id = ma.city_id
+                       and c.pro_id = pro.pro_id
+					)proId
+				 , (
+					select c.city_id
+                      from city c
+                     where c.city_id = ma.city_id
+					)cityId
+				 , (
+					select pro.pro_name
+                      from city c , province pro 
+                     where c.city_id = ma.city_id
+                       and c.pro_id = pro.pro_id
+					)proName
+				 , (
+					select c.city_name
+                      from city c
+                     where c.city_id = ma.city_id
+					)cityName
+				 , ma.manager_telphone managerTelphone
+				 , ma.manager_mobilephone managerMobilephone
+				 , ma.manager_email managerEmail
+				 , u.username userName
+				 , u.user_id userId
+				 , ma.is_lock isLock
+				 , ma.is_delete isDelete
+            	 , org.org_id orgId
+				 , org.org_name orgName
+				 , r.role_id roleId
+           		 , r.role_name roleName
+           		 , ma.idcard
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+			   and ma.manager_id = #managerId#
+			   and ma.is_delete='0'
+	 	  ORDER BY ma.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 更新用户信息
+	 -->
+	 <update id="com.zwhs.chattel.dao.impl.RoleDao.updateUserManagerUserInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			UPDATE user SET
+				username = #userName#,
+				role_id = #roleId#
+			WHERE user_id = #userId#
+		]]>
+	 </update>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 更新用户信息
+	 -->
+	 <update id="com.zwhs.chattel.dao.impl.RoleDao.updateUserManagerInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			UPDATE manager SET
+				   city_id = #cityId#,
+				   manager_telphone = #managerTelphone#,
+				   manager_mobilephone = #managerMobilephone#,
+				   manager_email = #managerEmail#,
+				   manager_name = #managerName#,
+				   org_id = #orgId#
+			WHERE manager_id = #managerId#
+		]]>
+	 </update>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 删除用户信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.RoleDao.deleteUserManagerUserInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			DELETE FROM user
+			 WHERE user_id = #userId#
+		]]>
+	</update>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 删除用户信息
+	 -->
+	<delete id="com.zwhs.chattel.dao.impl.RoleDao.deleteUserManagerInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			DELETE FROM manager
+			 WHERE manager_id = #managerId#
+		]]>
+	</delete>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 锁定用户信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.RoleDao.lockUserManagerUserInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			UPDATE manager SET
+				   is_lock = '1'
+			WHERE  manager_id = #managerId#
+		]]>
+	</update>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.24
+		desc: 解锁用户信息
+	 -->
+	<update id="com.zwhs.chattel.dao.impl.RoleDao.unlockUserManagerUserInfo" parameterClass="java.util.HashMap">
+		<![CDATA[
+			UPDATE manager SET
+				   is_lock = '0'
+			WHERE  manager_id = #managerId#
+		]]>
+	</update>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.26
+		desc: 查询用户登录名是否存在
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.RoleDao.isExistUserName" parameterClass="java.lang.String" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT u.username
+			  FROM user u
+			 WHERE u.username = #userName#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.26
+		desc: 查询用户名是否存在
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.RoleDao.isExistManagerName" parameterClass="java.lang.String" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT manager_name
+			  FROM manager
+		 	 WHERE manager_name = #managerName#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.26
+		desc: 给用户设置角色
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.UserDao.accountUserManagerRoleSetting" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT role_id
+				 , role_name
+			  FROM role r
+		     WHERE r.org_id = #orgId#
+			   AND r.otype_id = #otypeId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.4.26
+		desc: 给用户设置角色
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.UserDao.getUserIdsByRoleId" parameterClass="java.lang.String" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT u.user_id
+			  FROM user u
+		 	 WHERE u.role_id = #roleId#
+		]]>
+	</select>
+	
+	<!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出所有属于当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUserManagerInfoListCountByUserId" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 	<![CDATA[
+			SELECT count(ma.manager_id)
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.parent_id = #parentOrgId#
+			   and ma.is_delete='0'
+			   and concat(ma.manager_name,r.role_name,org.org_name) like '%$input$%'
+	 	  ORDER BY ma.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.3.12
+		desc: 查询出当前用户的组织机构及用户信息
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getCurrentUserManagerInfoListCountByUserId" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 	<![CDATA[
+			SELECT count(ma.manager_id)
+			FROM   organization org
+          		 , manager ma
+          		 , user u
+          		 , role r
+          		 , org_type ot
+			WHERE  org.org_id = ma.org_id
+        	   and ma.user_id = u.user_id
+        	   and u.role_id = r.role_id
+        	   and ot.otype_id = org.otype_id
+			   and org.org_id = #parentOrgId#
+			   and ma.is_delete='0'
+			   and concat(ma.manager_name,r.role_name,org.org_name) like '%$input$%'
+	 	  ORDER BY ma.update_time desc
+		]]>
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.5.15
+		desc: 查询出当前用户是否被作为承办人
+	 --><!--
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUndertakerByManagerId" parameterClass="java.lang.String" resultClass="pledge">
+	 	<![CDATA[
+			SELECT p.undertaker_id undertakerId
+			FROM   pledge p
+			WHERE  p.undertaker_id = #managerId#
+		]]>
+	 </select>
+	 
+	 -->
+	 
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getUndertakerByManagerId" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+	 	SELECT
+			count(p.undertaker_id)
+		FROM
+			pledge p
+		WHERE
+			p.undertaker_id = #value#
+	 </select>
+	 
+	 <!--
+		author: jimmyan
+		date: 2014.6.18
+		desc: 查询出当前用户是否进行过登记业务
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.RoleDao.getRegisterByManagerId" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+	 	SELECT
+			count(p.register_id)
+		FROM
+			pledge p
+		WHERE
+			p.register_id = #value#
+	 </select>
+	 
+	 
+	 <!--
+		author: bianrx
+		date: 2014.5.27
+		desc: 根据组织机构id查询用户id和名称
+	 -->
+	 <select id="com.zwhs.chattel.dao.impl.UserDao.selectManagerByOrgId" parameterClass="java.lang.String" resultClass="manager">
+	 	<![CDATA[
+			SELECT manager_id managerId
+			     , manager_name managerName
+			  FROM manager
+			 WHERE org_id = #orgId#
+		]]>
+	 </select>
+	 
+	 
+	
+</sqlMap>

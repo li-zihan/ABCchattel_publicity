@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="orgType" type="com.zwhs.chattel.entities.OrgType" />
+	<!--
+		author: bianrx
+		date: 2014.4.14
+		desc: 组织机构类别
+	 -->
+
+	<!-- 查询所有的组织结构类型，包括总行分行支行，返回类型为OrgType -->
+	<select id="com.zwhs.chattel.dao.impl.OrgTypeDao.selectOrgTypeList"
+		resultClass="com.zwhs.chattel.entities.OrgType">
+		<![CDATA[
+			SELECT type.otype_id otypeId
+			     , type.otype_name otypeName
+			     , type.update_time updateTime
+			  FROM org_type type
+		]]>
+	</select>
+
+	<!-- 根据组织机构类型的Id，查询组织机构结构类型的所有信息，参数为组织结构类型Id，参数类型为String，返回类型为OrgType -->
+	<select id="com.zwhs.chattel.dao.impl.OrgTypeDao.selectOrgTypeById"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.OrgType">
+		<![CDATA[
+			SELECT type.otype_id otypeId
+			     , type.otype_name otypeName
+			     , type.update_time updateTime
+			  FROM org_type type
+			  WHERE type.otype_id = #otypeId#
+		]]>
+	</select>
+
+	<!-- author: bianrx date: 2014.4.25 desc: 通过组织机构ID查询下级组织机构类别 -->
+	<select
+		id="com.zwhs.chattel.dao.impl.OrgTypeDao.getChildOrgType"
+		parameterClass="java.lang.String" resultClass="com.zwhs.chattel.entities.OrgType">
+		SELECT cty.otype_id
+		otypeId
+		, cty.otype_name otypeName
+		FROM org_type cty
+		WHERE cty.parent_id = (
+		SELECT type.otype_id
+		FROM organization org,
+		org_type type
+		WHERE org.otype_id = type.otype_id
+		AND org.org_id = #orgId#
+		)
+	</select>
+	
+	<!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 通过组织机构ID查询组织机构类别
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrgTypeDao.selectOrgTypeByOrgId" parameterClass="java.lang.String" resultClass="orgType">
+		SELECT type.otype_id otypeId
+		     , type.otype_name otypeName
+	      FROM organization org
+			 , org_type type
+		 WHERE org.otype_id = type.otype_id
+		   AND org.org_id = #orgId#
+	</select>
+	
+	<!--
+		author: bianrx
+		date: 2014.4.25
+		desc: 通过组织机构ID查询下级组织机构类别
+	 -->
+	<select id="com.zwhs.chattel.dao.impl.OrgTypeDao.selectChildOrgTypeByOrgId" parameterClass="java.lang.String" resultClass="orgType">
+		SELECT cty.otype_id otypeId
+		     , cty.otype_name otypeName
+	      FROM org_type cty
+	     WHERE cty.parent_id = (
+			SELECT type.otype_id
+			  FROM organization org,
+				   org_type type
+			 WHERE org.otype_id = type.otype_id
+			   AND org.org_id = #orgId#
+			)
+	</select>
+</sqlMap>
